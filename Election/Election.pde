@@ -7,7 +7,6 @@ void setup() {
   
   reader = new XlsReader( this, "data/formatted_data_2012.xls");
   reader.firstRow();
-  reader.nextRow();
   
   while (reader.hasMoreRows() ) {
     reader.nextRow();
