@@ -24,7 +24,6 @@ void setup() {
     State currentState;
     
     if(states.size() == 0 || states.get(states.size()-1).name != state) {
-      println("new state");
        currentState = new State(state, stateAbbreviation);
        states.add(currentState);
     }
