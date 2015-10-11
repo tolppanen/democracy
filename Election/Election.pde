@@ -2,6 +2,8 @@ import de.bezier.data.*;
 
 XlsReader reader;
 
+ArrayList<Candidate> candidates = new ArrayList<Candidate>();
+
 void setup() {
   size(600,400);
   
@@ -22,7 +24,7 @@ void setup() {
     
     reader.nextCell();
     
-    //String candidateID = reader.getString();
+    String candidateID = reader.getString();
     
     reader.nextCell();
     
@@ -44,17 +46,10 @@ void setup() {
     
     String winner = reader.getString();
     
-    String resultString;
-    
-    if(winner.equals("W") && votes.equals(0)) resultString = " unopposed.";
-    else resultString = " with " + votes + " votes." + "(" + percentage * 100 + "%)";
-    
-    if(winner.equals("W")){
-    println("Candidate " + name + "(" + party + ")" + " won district " + district + " of " + state + resultString);
+    if(percentage > 0.01) candidates.add(new Candidate(name, party, candidateID));
     }
     
-    
+    println(candidates.size());
   }
   
   
-}
