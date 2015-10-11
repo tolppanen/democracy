@@ -4,7 +4,6 @@ class Candidate {
   
   Candidate(String fullName, String candidateParty, String candidateId) {
     String[] splitName = fullName.split(", ");
-    println(fullName);
     firstName = splitName[1];
     lastName = splitName[0];
     if(candidateParty.equals("R")) party = "Republican";
@@ -14,6 +13,6 @@ class Candidate {
   }
   
   public String toString() {
-    return this.firstName + " " + this.lastName + " " + this.party;
+    return this.firstName + " " + this.lastName + " (" + this.party + ")";
   }
 }
