@@ -14,11 +14,28 @@ class District {
     country = map;
     stateColor = color(102, 0, 0);
   }
-  void colorDistrict() {    
-    stateCode = state.abbreviation + "_" + number.substring(1);
-    district = country.getChild(stateCode);
-    fill(stateColor);
-    shape(district);
+  
+  color colorDistrict() {
+   String party = getWinner(2012).getParty();
+   if(party == "Rebublican") {
+     stateColor = color(102, 0, 0);
+   } else {
+     stateColor = color(0, 0, 102);
+   }
+   return stateColor;
   }
   
+   Candidate getWinner(int year) {
+    Candidate currentWinner;
+    int maxValue = 0;
+    for(Candidate candidate : candidates_2012.keySet()) {
+     if(this.candidates_2012.get(candidate) > maxValue) {
+       currentWinner = candidate;
+       print(currentWinner);
+       maxValue = this.candidates_2012.get(candidate);
+     }
+     else currentWinner = new Candidate("whole", "thing", "sucks");
+    }
+    return currentWinner;
+  }
 }

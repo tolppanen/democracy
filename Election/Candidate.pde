@@ -15,4 +15,8 @@ class Candidate {
   public String toString() {
     return this.firstName + " " + this.lastName + " (" + this.party + ")";
   }
+  
+  String getParty() {
+   return party; 
+  }
 }

@@ -1,4 +1,5 @@
 import de.bezier.data.*;
+import java.util.*;
 
 XlsReader reader;
 
@@ -8,14 +9,16 @@ int startX;
 int startY;
 int origoX = 0;
 int origoY = 0;
+float zoomX = 1024;
+float zoomY = 617;
+float zoomYX = 1024 / 617;
 int x;
 int y;
-float zoom = 1;
 boolean firstPressed = true;
 
 ArrayList<Candidate> candidates = new ArrayList<Candidate>();
 ArrayList<State> states = new ArrayList<State>();
-ArrayList<PShape> stateShapes = new ArrayList<PShape>();
+ArrayList<PShape> districtShapes = new ArrayList<PShape>();
 
 void setup() {
   size(1200,680);
@@ -24,7 +27,6 @@ void setup() {
   reader.firstRow();
   
   map = loadShape("data/us_congressional_districts.svg");
-  map.scale(0.4);
   
   while (reader.hasMoreRows() ) {
     reader.nextRow();
@@ -109,9 +111,11 @@ void setup() {
         }
       if(map.getChild(stateCode) != null) {
       PShape district = map.getChild(stateCode);
-      stateShapes.add(district);   
+      districtShapes.add(district);   
+      //districtShapes.get(i).scale(0.4);
       }
-    }    
+    } 
+     
    }
   }
     
@@ -120,14 +124,20 @@ void setup() {
   
   void draw() {
   background(0);
-  shape(map, x, y);
-  for(int i= 0; i < stateShapes.size(); i++) {
-    stateShapes.get(i).disableStyle();
-    fill(102, 0, 0);
-    shape(stateShapes.get(i));
+  for(int i= 0; i < districtShapes.size(); i++) {
+      districtShapes.get(i).disableStyle();   
+    
+    for(int j = 0; j < states.size(); j++){
+      for(int k = 0; k < states.get(j).districts.size(); k++) {
+       fill(states.get(j).districts.get(k).colorDistrict());
+      }
+    }  
+    shape(districtShapes.get(i), x ,y, zoomX, zoomY);
+    districtShapes.get(i);
   }
   fill(255,255,255);
   ellipse(mouseX, mouseY, 20, 20);
+  
 }
 
 void mousePressed() {
@@ -150,12 +160,21 @@ void mouseReleased() {
 }
 
 void keyPressed() {
-   if(key == CONTROL) {
-    zoom += 0.1;
-    
+   if(keyCode == UP) {
+    zoomY += 25;
+    zoomX = zoomY * zoomYX;
    } 
+   if(keyCode == DOWN) {
+     zoomY -= 25;
+     zoomX = zoomY * zoomYX;
+   }
+   if(keyCode == CONTROL) {
+     zoomX = 1024;
+     zoomY = 617;
+   }
   
 }
+
   
   
   
