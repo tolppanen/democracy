@@ -16,7 +16,4 @@ class Candidate {
     return this.firstName + " " + this.lastName + " (" + this.party + ")";
   }
   
-  String getParty() {
-   return party; 
-  }
 }

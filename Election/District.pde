@@ -5,37 +5,43 @@ class District {
   PShape district;
   PShape country;
   String stateCode;
-  color stateColor;
+  color districtColor;
+  
   
   District(State parentState, String districtNo, PShape map){
     state = parentState;
     number = districtNo;
     candidates_2012 = new HashMap<Candidate, Integer>();
     country = map;
-    stateColor = color(102, 0, 0);
+    districtColor = color(0, 0, 0);
+    
   }
   
-  color colorDistrict() {
-   String party = getWinner(2012).getParty();
-   if(party == "Rebublican") {
-     stateColor = color(102, 0, 0);
-   } else {
-     stateColor = color(0, 0, 102);
+  void setUp() {
+   if(number.equals("S") == false) {
+     if(number.equals("00") == true) {
+       stateCode = state.abbreviation + "_" + "At-Large";
+     } else if(number.charAt(0) == '0') {
+         stateCode = state.abbreviation + "_" + number.substring(1);
+       } else {
+         stateCode = state.abbreviation + "_" + number;
+       }     
+     district = country.getChild(stateCode);
    }
-   return stateColor;
   }
-  
-   Candidate getWinner(int year) {
-    Candidate currentWinner = new Candidate("Gounares, Peter", "R", "H0AL01030");
+    
+   void getWinner(int year) {
     int maxValue = 0;
-    for(Candidate candidate : candidates_2012.keySet()) {
-     if(this.candidates_2012.get(candidate) > maxValue) {
-       currentWinner = candidate;
-       
+    for(Candidate candidate : candidates_2012.keySet()) {;
+     if(this.candidates_2012.get(candidate) >= maxValue) {
+       Candidate currentWinner = candidate;    
+       if(currentWinner.party.equals("Republican")) {
+        districtColor = color(102, 0, 0); 
+       } else {
+        districtColor = color(0, 0, 102); 
+       }
        maxValue = this.candidates_2012.get(candidate);
-     } else currentWinner = new Candidate("Gounares, Peter", "R", "H0AL01030");
+     } 
     }
-    print(currentWinner);
-    return currentWinner;
   }
 }

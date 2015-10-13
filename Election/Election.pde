@@ -18,7 +18,8 @@ boolean firstPressed = true;
 
 ArrayList<Candidate> candidates = new ArrayList<Candidate>();
 ArrayList<State> states = new ArrayList<State>();
-ArrayList<PShape> districtShapes = new ArrayList<PShape>();
+//ArrayList<PShape> districtShapes = new ArrayList<PShape>();
+
 
 void setup() {
   size(1200,680);
@@ -96,12 +97,8 @@ void setup() {
     
     
     for(int i = 0; i < states.size(); i++) {
-    int size = states.get(i).districts.size();
-    if(states.get(i).abbreviation.equals("CT")) {
-      size = 5;
-    }
-    for(int j = 0; j < size; j++) {
-      String stateCode;
+    for(int j = 0; j < states.get(i).districts.size(); j++) {
+     /* String stateCode;
       if(states.get(i).districts.get(j).number.equals("S") == false) {
         if(size == 1 || (size == 2 && states.get(i).districts.get(1).number.equals("S") == true)) {
           stateCode = states.get(i).abbreviation + "_" + "At-Large";
@@ -109,13 +106,15 @@ void setup() {
         else {
           stateCode = states.get(i).abbreviation + "_" + (j + 1);
         }
-      if(map.getChild(stateCode) != null) {
-      PShape district = map.getChild(stateCode);
-      districtShapes.add(district);   
+   //   if(map.getChild(stateCode) != null) {
+  //    PShape district = map.getChild(stateCode);
+   //   districtShapes.add(district);   
+      
       //districtShapes.get(i).scale(0.4);
-      }
-    } 
-     
+  //7    }
+    }   */
+      states.get(i).districts.get(j).setUp();
+      states.get(i).districts.get(j).getWinner(2012);
    }
   }
     
@@ -124,16 +123,16 @@ void setup() {
   
   void draw() {
   background(0);
-  for(int i= 0; i < districtShapes.size(); i++) {
-      districtShapes.get(i).disableStyle();   
+  for(int j = 0; j < states.size(); j++) {
     
-    for(int j = 0; j < states.size(); j++){
-      for(int k = 0; k < states.get(j).districts.size(); k++) {
-       fill(states.get(j).districts.get(k).colorDistrict());
+    for(int i= 0; i < states.get(j).districts.size(); i++) {
+     // districtShapes.get(i).disableStyle();   
+      if(states.get(j).districts.get(i).district != null) {
+        states.get(j).districts.get(i).district.disableStyle();
+        fill(states.get(j).districts.get(i).districtColor);
+        shape(states.get(j).districts.get(i).district, x ,y, zoomX, zoomY);
       }
-    }  
-    shape(districtShapes.get(i), x ,y, zoomX, zoomY);
-    districtShapes.get(i);
+    }
   }
   fill(255,255,255);
   ellipse(mouseX, mouseY, 20, 20);
