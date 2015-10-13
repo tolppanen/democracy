@@ -120,15 +120,17 @@ void setup() {
   background(0);
   shape(map, x, y);
   
-  
-  fill(102, 0, 0);
+  for(int i= 0; i < stateShapes.size(); i++) {
+    fill(102, 0, 0);
+    shape(stateShapes.get(i));
+  }
   fill(255,255,255);
   ellipse(mouseX, mouseY, 20, 20);
 }
 
 void mousePressed() {
   if(firstPressed) {
-   first=e;
+   firstPressed = false;
    startX = mouseX;
    startY = mouseY; 
   }
@@ -145,8 +147,8 @@ void mouseReleased() {
   origoY = y;
 }
 
-void keyReleased() {
-   if(keyCode == CONTROL) {
+void keyPressed() {
+   if(key == CONTROL) {
     zoom += 0.1;
     
    } 
