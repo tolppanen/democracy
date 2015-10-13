@@ -26,29 +26,6 @@ void setup() {
   map = loadShape("data/us_congressional_districts.svg");
   map.scale(0.4);
   
-  for(int i = 0; i < states.size(); i++) {
-    int size = states.get(i).districts.size();
-    if(states.get(i).abbreviation.equals("CT")) {
-      size = 5;
-    }
-    for(int j = 0; j < size; j++) {
-      if(states.get(i).districts.get(j).number.equals("S") != false && states.get(i).abbreviation.equals("DC") != false) {
-        String stateCode;
-        if(size == 1 || (size == 2 && states.get(i).districts.get(1).number.equals("S") == true)) {
-          stateCode = states.get(i).abbreviation + "_" + "At-Large";
-        }
-        else {
-          stateCode = states.get(i).abbreviation + "_" + (j + 1);
-        }
-      PShape district = map.getChild(stateCode);
-      stateShapes.add(district);        
-    }
-    
-   }
-  }
-  
-  
-  
   while (reader.hasMoreRows() ) {
     reader.nextRow();
     reader.firstCell();
@@ -114,13 +91,38 @@ void setup() {
       println(accessState.name + " district No. " + currentDistrict.number + " results: " + currentDistrict.candidates_2012);
       }
     } */
+    
+    
+    for(int i = 0; i < states.size(); i++) {
+    int size = states.get(i).districts.size();
+    if(states.get(i).abbreviation.equals("CT")) {
+      size = 5;
+    }
+    for(int j = 0; j < size; j++) {
+      String stateCode;
+      if(states.get(i).districts.get(j).number.equals("S") == false) {
+        if(size == 1 || (size == 2 && states.get(i).districts.get(1).number.equals("S") == true)) {
+          stateCode = states.get(i).abbreviation + "_" + "At-Large";
+        }
+        else {
+          stateCode = states.get(i).abbreviation + "_" + (j + 1);
+        }
+      if(map.getChild(stateCode) != null) {
+      PShape district = map.getChild(stateCode);
+      stateShapes.add(district);   
+      }
+    }    
+   }
+  }
+    
+    
   }
   
   void draw() {
   background(0);
   shape(map, x, y);
-  
   for(int i= 0; i < stateShapes.size(); i++) {
+    stateShapes.get(i).disableStyle();
     fill(102, 0, 0);
     shape(stateShapes.get(i));
   }
