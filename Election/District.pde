@@ -26,16 +26,16 @@ class District {
   }
   
    Candidate getWinner(int year) {
-    Candidate currentWinner;
+    Candidate currentWinner = new Candidate("Gounares, Peter", "R", "H0AL01030");
     int maxValue = 0;
     for(Candidate candidate : candidates_2012.keySet()) {
      if(this.candidates_2012.get(candidate) > maxValue) {
        currentWinner = candidate;
-       print(currentWinner);
+       
        maxValue = this.candidates_2012.get(candidate);
-     }
-     else currentWinner = new Candidate("whole", "thing", "sucks");
+     } else currentWinner = new Candidate("Gounares, Peter", "R", "H0AL01030");
     }
+    print(currentWinner);
     return currentWinner;
   }
 }
