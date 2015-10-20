@@ -30,18 +30,21 @@ class District {
    }
   }
     
-   void getWinner(int year) {
+   Candidate getWinner(int year) {
     int maxValue = 0;
-    for(Candidate candidate : candidates_2012.keySet()) {;
+    Candidate winner = new Candidate("a, a","R","a");
+    for(Candidate candidate : candidates_2012.keySet()) {
      if(this.candidates_2012.get(candidate) >= maxValue) {
        Candidate currentWinner = candidate;    
        if(currentWinner.party.equals("Republican")) {
-        districtColor = color(102, 0, 0); 
+        districtColor = color(255, 0, 0); 
        } else {
-        districtColor = color(0, 0, 102); 
+        districtColor = color(0, 191, 255); 
        }
+       winner = candidate;
        maxValue = this.candidates_2012.get(candidate);
      } 
     }
+    return winner;
   }
 }

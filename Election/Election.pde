@@ -1,5 +1,6 @@
 import de.bezier.data.*;
 import java.util.*;
+import geomerative.*;
 
 XlsReader reader;
 
@@ -15,19 +16,25 @@ float zoomYX = 1024 / 617;
 int x;
 int y;
 boolean firstPressed = true;
-
+PShape hiddenMap; // hidden Map
 ArrayList<Candidate> candidates = new ArrayList<Candidate>();
 ArrayList<State> states = new ArrayList<State>();
+District activeDistrict;
 //ArrayList<PShape> districtShapes = new ArrayList<PShape>();
 
 
 void setup() {
   size(1200,680);
+  surface.setResizable(true);
+  frameRate(20);
   
   reader = new XlsReader( this, "data/formatted_data_2012.xls");
   reader.firstRow();
   
   map = loadShape("data/us_congressional_districts.svg");
+  hiddenMap = loadShape("data/us_congressional_districts.svg");
+  smooth();
+
   
   while (reader.hasMoreRows() ) {
     reader.nextRow();
@@ -86,33 +93,9 @@ void setup() {
     
     currentDistrict.candidates_2012.put(newCandidate, votes);
     }
-    
-/*    for(int i = 0; i < states.size(); i++) {
-      State accessState = states.get(i);
-      for(int k = 0; k < accessState.districts.size() - 1; k++){
-      District currentDistrict = accessState.districts.get(k);
-      println(accessState.name + " district No. " + currentDistrict.number + " results: " + currentDistrict.candidates_2012);
-      }
-    } */
-    
-    
+
     for(int i = 0; i < states.size(); i++) {
     for(int j = 0; j < states.get(i).districts.size(); j++) {
-     /* String stateCode;
-      if(states.get(i).districts.get(j).number.equals("S") == false) {
-        if(size == 1 || (size == 2 && states.get(i).districts.get(1).number.equals("S") == true)) {
-          stateCode = states.get(i).abbreviation + "_" + "At-Large";
-        }
-        else {
-          stateCode = states.get(i).abbreviation + "_" + (j + 1);
-        }
-   //   if(map.getChild(stateCode) != null) {
-  //    PShape district = map.getChild(stateCode);
-   //   districtShapes.add(district);   
-      
-      //districtShapes.get(i).scale(0.4);
-  //7    }
-    }   */
       states.get(i).districts.get(j).setUp();
       states.get(i).districts.get(j).getWinner(2012);
    }
@@ -122,21 +105,47 @@ void setup() {
   }
   
   void draw() {
-  background(0);
-  for(int j = 0; j < states.size(); j++) {
-    
-    for(int i= 0; i < states.get(j).districts.size(); i++) {
-     // districtShapes.get(i).disableStyle();   
-      if(states.get(j).districts.get(i).district != null) {
-        states.get(j).districts.get(i).district.disableStyle();
-        fill(states.get(j).districts.get(i).districtColor);
-        shape(states.get(j).districts.get(i).district, x ,y, zoomX, zoomY);
-      }
-    }
-  }
+  
+  background(255);
+  drawHiddenStates();
+  drawVisibleStates();
+
   fill(255,255,255);
   ellipse(mouseX, mouseY, 20, 20);
-  
+}
+
+void drawVisibleStates() {
+   for(int j = 0; j < states.size(); j++) {    
+   for(int i= 0; i < states.get(j).districts.size(); i++) {   
+     if(states.get(j).districts.get(i).district != null) {
+       states.get(j).districts.get(i).district.disableStyle();
+       fill(states.get(j).districts.get(i).districtColor);  
+       shape(states.get(j).districts.get(i).district, x ,y, zoomX, zoomY);
+     }
+   }
+  }
+  if(activeDistrict != null) {
+  activeDistrict.district.disableStyle();
+  fill(0,0,0);
+  shape(activeDistrict.district, x, y, zoomX,zoomY);
+  }
+}
+
+void drawHiddenStates() {
+  for(int j = 0; j < states.size(); j++) {    
+   for(int i= 0; i < states.get(j).districts.size(); i++) {   
+     if(states.get(j).districts.get(i).district != null) {
+       states.get(j).districts.get(i).district.disableStyle();
+       color c = color(j,i,0);
+       fill(c);
+       shape(states.get(j).districts.get(i).district, x ,y, zoomX, zoomY);
+       if(get(mouseX,mouseY) == c) {
+         activeDistrict = states.get(j).districts.get(i);
+         println(activeDistrict.stateCode + " " + activeDistrict.number + " won by " + activeDistrict.getWinner(2012).toString());
+       }
+     }
+   }
+  }
 }
 
 void mousePressed() {
@@ -161,11 +170,11 @@ void mouseReleased() {
 void keyPressed() {
    if(keyCode == UP) {
     zoomY += 25;
-    zoomX = zoomY * zoomYX;
+    zoomX += 25 * zoomYX;
    } 
    if(keyCode == DOWN) {
      zoomY -= 25;
-     zoomX = zoomY * zoomYX;
+     zoomX -= 25 * zoomYX;
    }
    if(keyCode == CONTROL) {
      zoomX = 1024;
@@ -174,7 +183,8 @@ void keyPressed() {
   
 }
 
-  
+
+
   
   
   

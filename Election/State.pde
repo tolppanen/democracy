@@ -11,9 +11,4 @@ class State {
   public String toString() {
     return this.name;
   }
-
-  
 }
-  
-  
-
