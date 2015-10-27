@@ -25,7 +25,7 @@ District activeDistrict;
 void setup() {
   size(1200,680);
   surface.setResizable(true);
-  frameRate(20);
+  //frameRate(20);
   
   reader = new XlsReader( this, "data/formatted_data_2012.xls");
   reader.firstRow();
@@ -118,6 +118,7 @@ void drawVisibleStates() {
    for(int i= 0; i < states.get(j).districts.size(); i++) {   
      if(states.get(j).districts.get(i).district != null) {
        states.get(j).districts.get(i).district.disableStyle();
+       stroke(color(255,255,255));
        fill(states.get(j).districts.get(i).districtColor);  
        shape(states.get(j).districts.get(i).district, x ,y, zoomX, zoomY);
      }
@@ -140,7 +141,7 @@ void drawHiddenStates() {
        shape(states.get(j).districts.get(i).district, x ,y, zoomX, zoomY);
        if(get(mouseX,mouseY) == c) {
          activeDistrict = states.get(j).districts.get(i);
-         println(activeDistrict.stateCode + " " + activeDistrict.number + " won by " + activeDistrict.getWinner(2012).toString());
+         //println(activeDistrict.stateCode + " " + activeDistrict.number + " won by " + activeDistrict.getWinner(2012).toString());
        }
      }
    }
