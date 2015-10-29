@@ -21,15 +21,12 @@ int infoy;
 int year = 2012;
 boolean firstPressed = true;
 PShape hiddenMap; // hidden Map
-//ArrayList<Candidate> candidates;
 ArrayList<State> states;
 District activeDistrict;
 PImage pic;
 Boolean mapMode;
 Ball[] balls = new Ball[235];
 boolean detailView;
-<<<<<<< HEAD
-=======
 String activeYear;
 
 
@@ -101,7 +98,8 @@ void setupData(int electionYear) {
     String party = reader.getString();    
     reader.nextCell();
     reader.nextCell();
-    Integer votesPercent = reader.getInt();  
+    Float votesPercent = reader.getFloat() * 100;  
+    
     reader.nextCell();   
     Candidate newCandidate = new Candidate(name, party, candidateID);   
     currentDistrict.candidates.put(newCandidate, votesPercent);
@@ -265,15 +263,17 @@ void keyPressed() {
            textSize(20);
            fill(255,255,255);
            text(headline, width - 380, 70);
+           String winningpercent = String.format("%.1f", activeDistrict.candidates.get(activeDistrict.getWinner(year)));
+           String runningUppercent = String.format("%.1f", activeDistrict.candidates.get(activeDistrict.getRunnerUp(year)));
            String nameQueryString = activeDistrict.getWinner(year).firstName + "_" + activeDistrict.getWinner(year).lastName;
            String link = "https://en.wikipedia.org/w/api.php?action=query&titles="+ nameQueryString +"&prop=pageimages&format=json&pithumbsize=200"; 
 
            String RUfirstName = activeDistrict.getRunnerUp(year).firstName;
            String RUlastName = activeDistrict.getRunnerUp(year).lastName;
            text(activeDistrict.getWinner(year).firstName + " " + activeDistrict.getWinner(year).lastName + " - " + activeDistrict.getWinner(year).party + 
-                " " + activeDistrict.candidates.get(activeDistrict.getWinner(year)) + "%" +
+                " " + winningpercent + "%" +
                 "\n" + "\n"+ "\n" +  "\n" + "\n"+ "Runner Up:" + "\n" +
-                RUfirstName + " " + RUlastName  + " - " + activeDistrict.getRunnerUp(year).party, width - 380, 400);
+                RUfirstName + " " + RUlastName  + " - " + activeDistrict.getRunnerUp(year).party + " " + runningUppercent + "%", width - 380, 400);
          String url = "http://pcforalla.idg.se/polopoly_fs/1.539126.1386947577!teaserImage/imageTypeSelector/localImage/3217596809.jpg";
          String web = loadStrings(link)[0];
          if(web.charAt(0) == '{' && web.contains("http")) {
