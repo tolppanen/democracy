@@ -27,6 +27,7 @@ District activeDistrict;
 PImage pic;
 Boolean mapMode;
 Ball[] balls = new Ball[235];
+boolean detailView;
 //ArrayList<PShape> districtShapes = new ArrayList<PShape>();
 
 
@@ -35,6 +36,7 @@ void setup() {
   frame.setResizable(true);
   setupData(2012);
   mapMode = true;
+  detailView = false;
   setupBalls();
 }
   
@@ -49,6 +51,7 @@ void setup() {
   }
   else if(!mapMode) {
     drawBalls();
+    drawMenu();
   }
   fill(255,255,255);
   ellipse(mouseX, mouseY, 20, 20);
@@ -217,32 +220,39 @@ void keyPressed() {
        }
        else if(mouseX > textBox * 3 && mouseX < textBox * 4) {
          setupData(2004);
+         setupBalls();
        }
        else if(mouseX > textBox * 5 && mouseX < textBox * 6) {
          setupData(2006);
+         setupBalls();
        }
        else if(mouseX > textBox * 7 && mouseX < textBox * 8) {
          setupData(2008);
+         setupBalls();
        }
        else if(mouseX > textBox * 9 && mouseX < textBox * 10) {
          setupData(2010);
+         setupBalls();
        } else {
          setupData(2012);
+         setupBalls();
        }} else {
-         noLoop();
-         fill(45, 45, 45, 191);
-         rect(width - 400, 35, 365, 550, 7);
-         String headline = activeDistrict.state.name + "'s " + activeDistrict.number  + "th " + "\n" + "Congressional District";
-         textSize(20);
-         fill(255,255,255);
-         text(headline, width - 380, 70);
-         String nameQueryString = activeDistrict.getWinner(year).firstName + "_" + activeDistrict.getWinner(year).lastName;
-         String link = "https://en.wikipedia.org/w/api.php?action=query&titles="+ nameQueryString +"&prop=pageimages&format=json&pithumbsize=200"; 
-         String RUfirstName = activeDistrict.getRunnerUpper(year).firstName;
-         String RUlastName = activeDistrict.getRunnerUpper(year).lastName;
-         text(activeDistrict.getWinner(year).firstName + " " + activeDistrict.getWinner(year).lastName + "\n" + 
-              RUfirstName + " " + RUlastName, width - 380, 400);
-         activeDistrict.getRunnerUpper(year);
+<<<<<<< HEAD
+           if(!detailView) {
+           noLoop();
+           fill(45, 45, 45, 191);
+           rect(width - 400, 35, 365, 550, 7);
+           String headline = activeDistrict.state.name + "'s " + activeDistrict.number  + "th " + "\n" + "Congressional District";
+           textSize(20);
+           fill(255,255,255);
+           text(headline, width - 380, 70);
+           String nameQueryString = activeDistrict.getWinner(year).firstName + "_" + activeDistrict.getWinner(year).lastName;
+           String link = "https://en.wikipedia.org/w/api.php?action=query&titles="+ nameQueryString +"&prop=pageimages&format=json&pithumbsize=200"; 
+           String RUfirstName = activeDistrict.getRunnerUpper(year).firstName;
+           String RUlastName = activeDistrict.getRunnerUpper(year).lastName;
+           text(activeDistrict.getWinner(year).firstName + " " + activeDistrict.getWinner(year).lastName + "\n" + 
+                RUfirstName + " " + RUlastName, width - 380, 400);
+           activeDistrict.getRunnerUpper(year);
          String url = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";
          try {
            JSONObject json = loadJSONObject(link);
@@ -262,7 +272,8 @@ void keyPressed() {
          }
            PImage img = loadImage(url);
            image(img, width - 350, 150);        
-         
+         }
+>>>>>>> 0abba3f979b41bd4a951170dd7d2d7548f4c8c63
      }
    }
    if(keyCode == 65) {
@@ -278,6 +289,7 @@ void keyReleased() {
     setupBalls();
   }
   if(keyCode == 32) {
+     detailView = false;
      loop();
      info = false;
    }
