@@ -27,7 +27,7 @@ void setup() {
   surface.setResizable(true);
   //frameRate(20);
   
-  reader = new XlsReader( this, "data/formatted_data_2012.xls");
+  reader = new XlsReader( this, "data/formatted_data_2010.xls");
   reader.firstRow();
   
   map = loadShape("data/us_congressional_districts.svg");
@@ -91,6 +91,7 @@ void setup() {
     Candidate newCandidate = new Candidate(name, party, candidateID);
     
     currentDistrict.candidates_2012.put(newCandidate, votes);
+    println(name);
     }
 
     for(int i = 0; i < states.size(); i++) {
