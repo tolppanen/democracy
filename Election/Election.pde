@@ -5,6 +5,7 @@ XlsReader reader;
 JSONObject json;
 PShape map;
 Boolean locked;
+Boolean info = false;
 int startX;
 int startY;
 int origoX = 0;
@@ -14,6 +15,9 @@ float zoomY = 617;
 float zoomYX = 1024 / 617;
 int x;
 int y;
+int infox;
+int infoy;
+int year = 2012;
 boolean firstPressed = true;
 PShape hiddenMap; // hidden Map
 //ArrayList<Candidate> candidates;
@@ -35,16 +39,16 @@ void setup() {
   
   void draw() {
   
-  background(255);
+  background(242, 242, 242);
   
   if(mapMode) {
   drawHiddenStates();
   drawVisibleStates();
+  drawMenu();
   }
   else if(!mapMode) {
     drawBalls();
   }
-
   fill(255,255,255);
   ellipse(mouseX, mouseY, 20, 20);
 }
@@ -99,7 +103,8 @@ void setupData(int electionYear) {
     for(int i = 0; i < states.size(); i++) {
     for(int j = 0; j < states.get(i).districts.size(); j++) {
       states.get(i).districts.get(j).setUp();
-      states.get(i).districts.get(j).getWinner(2012);
+      states.get(i).districts.get(j).getWinner(year);
+      states.get(i).districts.get(j).getRunnerUpper(year);
    }
   }
 }
@@ -147,6 +152,26 @@ void drawHiddenStates() {
   }
 }
 
+void drawMenu(){
+ int textwidth = width / 13;
+ 
+ fill(65, 65, 65, 191);
+ noStroke();
+ rect(0, height - 35, width, height);
+ 
+ fill(255, 255, 255);
+ PFont font;
+ font = loadFont("Kalinga-48.vlw");
+ textFont(font, 16);
+ text(2002, textwidth * 1, height - 10);
+ text(2004, textwidth * 3, height - 10);
+ text(2006, textwidth * 5, height - 10);
+ text(2008, textwidth * 7, height - 10);
+ text(2010, textwidth * 9, height - 10);
+ text(2012, textwidth * 11, height - 10);
+ 
+}
+
 void mousePressed() {
   if(firstPressed) {
    firstPressed = false;
@@ -184,20 +209,35 @@ void keyPressed() {
      setupBalls();
    }
    if(keyCode == 32) {
+     int textBox = width / 13;
+     if(mouseY > height - 20) {
+       if(mouseX > textBox && mouseX < textBox * 2) {
+         setupData(2002);
+       }
+       else if(mouseX > textBox * 3 && mouseX < textBox * 4) {
+         setupData(2004);
+       }
+       else if(mouseX > textBox * 5 && mouseX < textBox * 6) {
+         setupData(2006);
+       }
+       else if(mouseX > textBox * 7 && mouseX < textBox * 8) {
+         setupData(2008);
+       }
+       else if(mouseX > textBox * 9 && mouseX < textBox * 10) {
+         setupData(2010);
+       } else {
+         setupData(2012);
+       }} else {
          noLoop();
-         fill(200,220,255,215);
-         rect(50,50,width-100,height-100);
-         String headline = activeDistrict.state.name + "'s " + activeDistrict.number + "th Congressional District";
-         Candidate winningCandidate = activeDistrict.getWinner(2012);
-         String winner = winningCandidate.firstName + " " + winningCandidate.lastName + "(" + winningCandidate.party + ")";
-         Integer votes = activeDistrict.candidates_2012.get(winningCandidate);
-         textSize(40);
-         fill(0,0,0);
-         text(headline, 80 + width/6, 100);
-         textSize(29);
-         text("Winner" + " " + winner + " with " + votes + " votes.", 80, 200); 
-         //palauttaa jsonin
-         // https://en.wikipedia.org/w/api.php?action=query&titles=TÄHÄN HAKUTERMIT!!!&prop=pageimages&format=json&pithumbsize=400.json  noLoop();
+         fill(45, 45, 45, 191);
+         rect(width - 400, 35, 365, 550, 7);
+         String headline = activeDistrict.state.name + "'s " + activeDistrict.number  + "th " + "\n" + "Congressional District";
+         textSize(20);
+         fill(255,255,255);
+         text(headline, width - 380, 70);
+         String nameQueryString = activeDistrict.getWinner(2012).firstName + "_" + activeDistrict.getWinner(2012).lastName;
+         String link = "https://en.wikipedia.org/w/api.php?action=query&titles="+ nameQueryString +"&prop=pageimages&format=json&pithumbsize=400";    
+     }
    }
    if(keyCode == 65) {
      mapMode = false;
@@ -213,6 +253,7 @@ void keyReleased() {
   }
   if(keyCode == 32) {
      loop();
+     info = false;
    }
    if(keyCode == 65) {
      mapMode = true;
