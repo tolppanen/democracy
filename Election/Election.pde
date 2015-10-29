@@ -194,7 +194,7 @@ void keyPressed() {
 //Placeholder implementation for changing year
 void keyReleased() {
   if(keyCode == SHIFT) {
-    setupData(2006);
+    setupData(2004);
   }
   if(keyCode == 32) {
      loop();
