@@ -170,7 +170,7 @@ void keyPressed() {
      zoomY = 617;
    }
    if(keyCode == SHIFT) {
-     setupData(2010);
+     setupData(2012);
    }
    if(keyCode == 32) {
          noLoop();
@@ -194,7 +194,7 @@ void keyPressed() {
 //Placeholder implementation for changing year
 void keyReleased() {
   if(keyCode == SHIFT) {
-    setupData(2012);
+    setupData(2008);
   }
   if(keyCode == 32) {
      loop();
