@@ -173,12 +173,18 @@ void keyPressed() {
      setupData(2010);
    }
    if(keyCode == 32) {
+         noLoop();
          fill(200,220,255,215);
          rect(50,50,width-100,height-100);
          String headline = activeDistrict.state.name + "'s " + activeDistrict.number + "th Congressional District";
+         Candidate winningCandidate = activeDistrict.getWinner(2012);
+         String winner = winningCandidate.firstName + " " + winningCandidate.lastName + "(" + winningCandidate.party + ")";
+         Integer votes = activeDistrict.candidates_2012.get(winningCandidate);
          textSize(40);
          fill(0,0,0);
          text(headline, 80 + width/6, 100);
+         textSize(29);
+         text("Winner" + " " + winner + " with " + votes + " votes.", 80, 200); 
          //palauttaa jsonin
          // https://en.wikipedia.org/w/api.php?action=query&titles=TÄHÄN HAKUTERMIT!!!&prop=pageimages&format=json&pithumbsize=400.json  noLoop();
    }
