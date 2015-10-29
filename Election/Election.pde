@@ -48,6 +48,7 @@ void setup() {
   }
   else if(!mapMode) {
     drawBalls();
+    drawMenu();
   }
   fill(255,255,255);
   ellipse(mouseX, mouseY, 20, 20);
@@ -216,17 +217,22 @@ void keyPressed() {
        }
        else if(mouseX > textBox * 3 && mouseX < textBox * 4) {
          setupData(2004);
+         setupBalls();
        }
        else if(mouseX > textBox * 5 && mouseX < textBox * 6) {
          setupData(2006);
+         setupBalls();
        }
        else if(mouseX > textBox * 7 && mouseX < textBox * 8) {
          setupData(2008);
+         setupBalls();
        }
        else if(mouseX > textBox * 9 && mouseX < textBox * 10) {
          setupData(2010);
+         setupBalls();
        } else {
          setupData(2012);
+         setupBalls();
        }} else {
          noLoop();
          fill(45, 45, 45, 191);
