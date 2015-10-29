@@ -27,7 +27,7 @@ Ball[] balls = new Ball[235];
 
 void setup() {
   size(1200,680);
-  surface.setResizable(true);
+  frame.setResizable(true);
   setupData(2012);
   mapMode = true;
   setupBalls();
