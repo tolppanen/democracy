@@ -16,11 +16,12 @@ int x;
 int y;
 boolean firstPressed = true;
 PShape hiddenMap; // hidden Map
-ArrayList<Candidate> candidates;
+//ArrayList<Candidate> candidates;
 ArrayList<State> states;
 District activeDistrict;
 PImage pic;
 Boolean mapMode;
+Ball[] balls = new Ball[235];
 //ArrayList<PShape> districtShapes = new ArrayList<PShape>();
 
 
@@ -29,6 +30,7 @@ void setup() {
   surface.setResizable(true);
   setupData(2012);
   mapMode = true;
+  setupBalls();
 }
   
   void draw() {
@@ -39,13 +41,16 @@ void setup() {
   drawHiddenStates();
   drawVisibleStates();
   }
+  else if(!mapMode) {
+    drawBalls();
+  }
 
   fill(255,255,255);
   ellipse(mouseX, mouseY, 20, 20);
 }
 
 void setupData(int electionYear) {
-  candidates = new ArrayList<Candidate>();
+  //candidates = new ArrayList<Candidate>();
   states = new ArrayList<State>();
   
   
@@ -176,6 +181,7 @@ void keyPressed() {
    }
    if(keyCode == SHIFT) {
      setupData(2010);
+     setupBalls();
    }
    if(keyCode == 32) {
          noLoop();
@@ -193,6 +199,9 @@ void keyPressed() {
          //palauttaa jsonin
          // https://en.wikipedia.org/w/api.php?action=query&titles=TÄHÄN HAKUTERMIT!!!&prop=pageimages&format=json&pithumbsize=400.json  noLoop();
    }
+   if(keyCode == 65) {
+     mapMode = false;
+   }
   
 }
 
@@ -200,11 +209,16 @@ void keyPressed() {
 void keyReleased() {
   if(keyCode == SHIFT) {
     setupData(2012);
+    setupBalls();
   }
   if(keyCode == 32) {
      loop();
    }
+   if(keyCode == 65) {
+     mapMode = true;
+   }
 }
+
 
 
 
