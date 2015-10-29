@@ -19,6 +19,7 @@ PShape hiddenMap; // hidden Map
 ArrayList<Candidate> candidates;
 ArrayList<State> states;
 District activeDistrict;
+PImage pic;
 //ArrayList<PShape> districtShapes = new ArrayList<PShape>();
 
 
@@ -172,20 +173,14 @@ void keyPressed() {
      setupData(2010);
    }
    if(keyCode == 32) {
-     noLoop();
-     fill(200,220,255,215);
-     rect(50,50,width-100,height-100);
-     String headline = activeDistrict.state.name + "'s " + activeDistrict.number + "th Congressional District";
-     textSize(40);
-     fill(0,0,0);
-     text(headline, 80 + width/6, 100);
-     String nameQueryString = activeDistrict.getWinner(2012).firstName + "_" + activeDistrict.getWinner(2012).lastName;
-     String link = "https://en.wikipedia.org/w/api.php?action=query&titles="+ nameQueryString +"&prop=pageimages&format=json&pithumbsize=400";
-     json = loadJSONObject(link);
-     println(json);
-     //JSONArray stuff = json.getJSONArray("query");
-     //JSONObject page = stuff.getJSONObject("pages");
-     //println(stuff);
+         fill(200,220,255,215);
+         rect(50,50,width-100,height-100);
+         String headline = activeDistrict.state.name + "'s " + activeDistrict.number + "th Congressional District";
+         textSize(40);
+         fill(0,0,0);
+         text(headline, 80 + width/6, 100);
+         //palauttaa jsonin
+         // https://en.wikipedia.org/w/api.php?action=query&titles=TÄHÄN HAKUTERMIT!!!&prop=pageimages&format=json&pithumbsize=400.json  noLoop();
    }
   
 }
