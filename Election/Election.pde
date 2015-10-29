@@ -28,10 +28,14 @@ PImage pic;
 Boolean mapMode;
 Ball[] balls = new Ball[235];
 boolean detailView;
+<<<<<<< HEAD
+=======
+String activeYear;
 
 
 void setup() {
   size(1200,680);
+  activeYear = "2012";
   frame.setResizable(true);
   setupData(2012);
   mapMode = true;
@@ -165,11 +169,22 @@ void drawMenu(){
  PFont font;
  font = loadFont("Kalinga-48.vlw");
  textFont(font, 16);
+ if(activeYear == "2002") fill(0,0,0);
  text(2002, textwidth * 1, height - 10);
+ fill(255, 255, 255);
+ if(activeYear == "2004") fill(0,0,0);
  text(2004, textwidth * 3, height - 10);
+ fill(255, 255, 255);
+ if(activeYear == "2006") fill(0,0,0);
  text(2006, textwidth * 5, height - 10);
+ fill(255, 255, 255);
+ if(activeYear == "2008") fill(0,0,0);
  text(2008, textwidth * 7, height - 10);
+ fill(255, 255, 255);
+ if(activeYear == "2010") fill(0,0,0);
  text(2010, textwidth * 9, height - 10);
+ fill(255, 255, 255);
+ if(activeYear == "2012") fill(0,0,0);
  text(2012, textwidth * 11, height - 10);
  
 }
@@ -215,25 +230,32 @@ void keyPressed() {
      if(mouseY > height - 20) {
        if(mouseX > textBox && mouseX < textBox * 2) {
          setupData(2002);
+         setupBalls();
+         activeYear="2002";
        }
        else if(mouseX > textBox * 3 && mouseX < textBox * 4) {
          setupData(2004);
          setupBalls();
+         activeYear="2004";
        }
        else if(mouseX > textBox * 5 && mouseX < textBox * 6) {
          setupData(2006);
          setupBalls();
+         activeYear="2006";
        }
        else if(mouseX > textBox * 7 && mouseX < textBox * 8) {
          setupData(2008);
          setupBalls();
+         activeYear="2008";
        }
        else if(mouseX > textBox * 9 && mouseX < textBox * 10) {
          setupData(2010);
          setupBalls();
+         activeYear="2010";
        } else {
          setupData(2012);
          setupBalls();
+         activeYear="2012";
        }} else {
            if(!detailView) {
            noLoop();
@@ -245,6 +267,7 @@ void keyPressed() {
            text(headline, width - 380, 70);
            String nameQueryString = activeDistrict.getWinner(year).firstName + "_" + activeDistrict.getWinner(year).lastName;
            String link = "https://en.wikipedia.org/w/api.php?action=query&titles="+ nameQueryString +"&prop=pageimages&format=json&pithumbsize=200"; 
+
            String RUfirstName = activeDistrict.getRunnerUp(year).firstName;
            String RUlastName = activeDistrict.getRunnerUp(year).lastName;
            text(activeDistrict.getWinner(year).firstName + " " + activeDistrict.getWinner(year).lastName + " - " + activeDistrict.getWinner(year).party + 
@@ -266,10 +289,11 @@ void keyPressed() {
              endLink = page.indexOf(".jpg\"") + 4;
            }
            url = page.substring(startLink, endLink);
-         }
-           PImage img = loadImage(url);
-           image(img, width - 350, 150);   
            }
+          PImage img = loadImage(url);
+          image(img, width - 350, 150); 
+          detailView = true;
+        }
      }
    }
    if(keyCode == 65) {
