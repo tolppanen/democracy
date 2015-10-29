@@ -228,17 +228,15 @@ void keyPressed() {
        } else {
          setupData(2012);
        }} else {
-       noLoop();
-       fill(45, 45, 45, 191);
-       rect(width - 400, 35, 365, 550, 7);
-       String headline = activeDistrict.state.name + "'s " + activeDistrict.number  + "th " + "\n" + "Congressional District";
-       textSize(20);
-       fill(255,255,255);
-       text(headline, width - 380, 70);
-       String nameQueryString = activeDistrict.getWinner(2012).firstName + "_" + activeDistrict.getWinner(2012).lastName;
-       String link = "https://en.wikipedia.org/w/api.php?action=query&titles="+ nameQueryString +"&prop=pageimages&format=json&pithumbsize=400";
-
-     
+         noLoop();
+         fill(45, 45, 45, 191);
+         rect(width - 400, 35, 365, 550, 7);
+         String headline = activeDistrict.state.name + "'s " + activeDistrict.number  + "th " + "\n" + "Congressional District";
+         textSize(20);
+         fill(255,255,255);
+         text(headline, width - 380, 70);
+         String nameQueryString = activeDistrict.getWinner(2012).firstName + "_" + activeDistrict.getWinner(2012).lastName;
+         String link = "https://en.wikipedia.org/w/api.php?action=query&titles="+ nameQueryString +"&prop=pageimages&format=json&pithumbsize=400";    
      }
    }
    if(keyCode == 65) {
