@@ -249,8 +249,9 @@ void keyPressed() {
            String link = "https://en.wikipedia.org/w/api.php?action=query&titles="+ nameQueryString +"&prop=pageimages&format=json&pithumbsize=200"; 
            String RUfirstName = activeDistrict.getRunnerUpper(year).firstName;
            String RUlastName = activeDistrict.getRunnerUpper(year).lastName;
-           text(activeDistrict.getWinner(year).firstName + " " + activeDistrict.getWinner(year).lastName + "\n" + 
-                RUfirstName + " " + RUlastName, width - 380, 400);
+           text(activeDistrict.getWinner(year).firstName + " " + activeDistrict.getWinner(year).lastName + " - " + activeDistrict.getWinner(year).party + "\n" + "\n"+ 
+                "\n" +  "\n" + "\n"+ "Runner Upper:" + "\n" +
+                RUfirstName + " " + RUlastName  + " - " + activeDistrict.getRunnerUpper(year).party, width - 380, 400);
            activeDistrict.getRunnerUpper(year);
          String url = "http://pcforalla.idg.se/polopoly_fs/1.539126.1386947577!teaserImage/imageTypeSelector/localImage/3217596809.jpg";
          String web = loadStrings(link)[0];
