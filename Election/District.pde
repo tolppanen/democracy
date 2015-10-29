@@ -37,9 +37,9 @@ class District {
      if(this.candidates_2012.get(candidate) >= maxValue) {
        Candidate currentWinner = candidate;    
        if(currentWinner.party.equals("Republican")) {
-        districtColor = color(255, 0, 0); 
+        districtColor = color(123, 10, 2); 
        } else {
-        districtColor = color(0, 191, 255); 
+        districtColor = color(27, 40, 65); 
        }
        winner = candidate;
        maxValue = this.candidates_2012.get(candidate);
@@ -47,4 +47,14 @@ class District {
     }
     return winner;
   }
+  
+  Object getRunnerUpper(int year) {
+    Set<Election.Candidate> candidates = this.candidates_2012.keySet();
+    Object[] candidateArray = candidates.toArray();
+     Object candidate = candidateArray[0];
+    if(this.candidates_2012.keySet().size() > 1) {      
+      candidate = candidateArray[1];
+    }
+    return candidate;
+}
 }
