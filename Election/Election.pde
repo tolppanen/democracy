@@ -1,5 +1,6 @@
 import de.bezier.data.*;
 import java.util.*;
+import java.lang.Exception.*;
 
 XlsReader reader;
 JSONObject json;
@@ -242,20 +243,26 @@ void keyPressed() {
          text(activeDistrict.getWinner(year).firstName + " " + activeDistrict.getWinner(year).lastName + "\n" + 
               RUfirstName + " " + RUlastName, width - 380, 400);
          activeDistrict.getRunnerUpper(year);
-         JSONObject json = loadJSONObject(link);
-         JSONObject query = json.getJSONObject("query");
-         JSONObject pages = query.getJSONObject("pages");
-         String page = pages.toString();
-         int startLink = page.indexOf("http");
-         int endLink = 2;
-         if(page.contains(".jpeg")) {
-           endLink = page.indexOf(".jpeg\"") + 5;
-         } else {
-           endLink = page.indexOf(".jpg\"") + 4;
+         String url = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";
+         try {
+           JSONObject json = loadJSONObject(link);
+           JSONObject query = json.getJSONObject("query");
+           JSONObject pages = query.getJSONObject("pages");
+           String page = pages.toString();
+           int startLink = page.indexOf("http");
+           int endLink = 2;
+           if(page.contains(".jpeg")) {
+             endLink = page.indexOf(".jpeg\"") + 5;
+           } else {
+             endLink = page.indexOf(".jpg\"") + 4;
+           }
+           url = page.substring(startLink, endLink);
+         } catch (Exception e) {
+           print("Barack");
          }
-         String url = page.substring(startLink, endLink);
-         PImage img = loadImage(url);
-         image(img, width - 350, 150);        
+           PImage img = loadImage(url);
+           image(img, width - 350, 150);        
+         
      }
    }
    if(keyCode == 65) {
