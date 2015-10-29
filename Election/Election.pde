@@ -28,7 +28,6 @@ PImage pic;
 Boolean mapMode;
 Ball[] balls = new Ball[235];
 boolean detailView;
-//ArrayList<PShape> districtShapes = new ArrayList<PShape>();
 
 
 void setup() {
@@ -96,19 +95,19 @@ void setupData(int electionYear) {
     String name = reader.getString();
     reader.nextCell();    
     String party = reader.getString();    
-    reader.nextCell();    
-    Integer votes = reader.getInt();  
     reader.nextCell();
+    reader.nextCell();
+    Integer votesPercent = reader.getInt();  
     reader.nextCell();   
     Candidate newCandidate = new Candidate(name, party, candidateID);   
-    currentDistrict.candidates_2012.put(newCandidate, votes);
+    currentDistrict.candidates.put(newCandidate, votesPercent);
     }
 
     for(int i = 0; i < states.size(); i++) {
     for(int j = 0; j < states.get(i).districts.size(); j++) {
       states.get(i).districts.get(j).setUp();
       states.get(i).districts.get(j).getWinner(year);
-      states.get(i).districts.get(j).getRunnerUpper(year);
+      states.get(i).districts.get(j).getRunnerUp(year);
    }
   }
 }
@@ -149,7 +148,6 @@ void drawHiddenStates() {
        shape(states.get(j).districts.get(i).district, x ,y, zoomX, zoomY);
        if(get(mouseX,mouseY) == c) {
          activeDistrict = states.get(j).districts.get(i);
-         //println(activeDistrict.stateCode + " " + activeDistrict.number + " won by " + activeDistrict.getWinner(2012).toString());
        }
      }
    }
@@ -247,15 +245,15 @@ void keyPressed() {
            text(headline, width - 380, 70);
            String nameQueryString = activeDistrict.getWinner(year).firstName + "_" + activeDistrict.getWinner(year).lastName;
            String link = "https://en.wikipedia.org/w/api.php?action=query&titles="+ nameQueryString +"&prop=pageimages&format=json&pithumbsize=200"; 
-           String RUfirstName = activeDistrict.getRunnerUpper(year).firstName;
-           String RUlastName = activeDistrict.getRunnerUpper(year).lastName;
-           text(activeDistrict.getWinner(year).firstName + " " + activeDistrict.getWinner(year).lastName + " - " + activeDistrict.getWinner(year).party + "\n" + "\n"+ 
-                "\n" +  "\n" + "\n"+ "Runner Upper:" + "\n" +
-                RUfirstName + " " + RUlastName  + " - " + activeDistrict.getRunnerUpper(year).party, width - 380, 400);
-           activeDistrict.getRunnerUpper(year);
+           String RUfirstName = activeDistrict.getRunnerUp(year).firstName;
+           String RUlastName = activeDistrict.getRunnerUp(year).lastName;
+           text(activeDistrict.getWinner(year).firstName + " " + activeDistrict.getWinner(year).lastName + " - " + activeDistrict.getWinner(year).party + 
+                " " + activeDistrict.candidates.get(activeDistrict.getWinner(year)) + "%" +
+                "\n" + "\n"+ "\n" +  "\n" + "\n"+ "Runner Up:" + "\n" +
+                RUfirstName + " " + RUlastName  + " - " + activeDistrict.getRunnerUp(year).party, width - 380, 400);
          String url = "http://pcforalla.idg.se/polopoly_fs/1.539126.1386947577!teaserImage/imageTypeSelector/localImage/3217596809.jpg";
          String web = loadStrings(link)[0];
-         if(web.charAt(0) == '{') {
+         if(web.charAt(0) == '{' && web.contains("http")) {
            JSONObject json = loadJSONObject(link);
            JSONObject query = json.getJSONObject("query");
            JSONObject pages = query.getJSONObject("pages");
