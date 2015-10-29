@@ -1,7 +1,7 @@
 class District {
   State state;
   String number;
-  HashMap<Candidate, Integer> candidates;
+  HashMap<Candidate, Float> candidates;
   PShape district;
   PShape country;
   String stateCode;
@@ -11,7 +11,7 @@ class District {
   District(State parentState, String districtNo, PShape map){
     state = parentState;
     number = districtNo;
-    candidates = new HashMap<Candidate, Integer>();
+    candidates = new HashMap<Candidate, Float>();
     country = map;
     districtColor = color(0, 0, 0);
     
@@ -32,8 +32,8 @@ class District {
   }
     
    Candidate getWinner(int year) {
-    Candidate winner = new Candidate("b, v", "R", "s");
     int index = 0;
+    Candidate winner = new Candidate("a, a","R","a");
     for(Candidate candidate : candidates.keySet()) {
       if(index == 0) {
         winner = candidate;
