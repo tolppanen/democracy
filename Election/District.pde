@@ -59,11 +59,11 @@ class District {
     Candidate winner = this.getWinner(2012);
     Candidate runnerUp = this.getRunnerUp(2012);
     float difference = 0.50000;
-    if(this.getWinner(2012) != null && this.getRunnerUp(2012).id != "s") difference = float(this.candidates.get(winner)) / (float(this.candidates.get(winner)) + float(this.candidates.get(runnerUp)));
+    if(this.getWinner(2012) != null && this.getRunnerUp(2012).id != "s") difference = this.candidates.get(winner) / (this.candidates.get(winner) + this.candidates.get(runnerUp));
     else difference = 1.0;
     if(this.getWinner(2012).party == "Republican") {
-      if(difference > 0.75) districtColor = color(249, 72, 72);
-      else if(difference > 0.55) districtColor = color(252, 153, 144);
+      if(difference > 0.85) districtColor = color(249, 72, 72);
+      else if(difference > 0.65) districtColor = color(252, 153, 144);
       else districtColor = color(255,226,215);
     }
     else {
