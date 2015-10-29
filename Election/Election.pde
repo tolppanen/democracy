@@ -237,7 +237,7 @@ void keyPressed() {
          setupData(2012);
          setupBalls();
        }} else {
-<<<<<<< HEAD
+
            if(!detailView) {
            noLoop();
            fill(45, 45, 45, 191);
@@ -253,7 +253,7 @@ void keyPressed() {
            text(activeDistrict.getWinner(year).firstName + " " + activeDistrict.getWinner(year).lastName + "\n" + 
                 RUfirstName + " " + RUlastName, width - 380, 400);
            activeDistrict.getRunnerUpper(year);
-         String url = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";
+         String url = "https://en.wikipedia.org/w/api.php?action=query&titles=Barack_Obama&prop=pageimages&format=json&pithumbsize=200";
          try {
            JSONObject json = loadJSONObject(link);
            JSONObject query = json.getJSONObject("query");
@@ -271,9 +271,8 @@ void keyPressed() {
            print("Barack");
          }
            PImage img = loadImage(url);
-           image(img, width - 350, 150);        
-         }
->>>>>>> 0abba3f979b41bd4a951170dd7d2d7548f4c8c63
+           image(img, width - 350, 150);   
+           }
      }
    }
    if(keyCode == 65) {
