@@ -241,8 +241,26 @@ void keyPressed() {
          textSize(20);
          fill(255,255,255);
          text(headline, width - 380, 70);
-         String nameQueryString = activeDistrict.getWinner(2012).firstName + "_" + activeDistrict.getWinner(2012).lastName;
-         String link = "https://en.wikipedia.org/w/api.php?action=query&titles="+ nameQueryString +"&prop=pageimages&format=json&pithumbsize=400";    
+         String nameQueryString = activeDistrict.getWinner(year).firstName + "_" + activeDistrict.getWinner(year).lastName;
+         String link = "https://en.wikipedia.org/w/api.php?action=query&titles="+ nameQueryString +"&prop=pageimages&format=json&pithumbsize=200";    
+         text(activeDistrict.getWinner(year).firstName + " " + activeDistrict.getWinner(year).lastName + "\n" + 
+              activeDistrict.getRunnerUpper(year).firstName + " " + activeDistrict.getRunnerUpper(year).lastName, width - 380, 400);
+         JSONObject json = loadJSONObject(link);
+         JSONObject query = json.getJSONObject("query");
+         JSONObject pages = query.getJSONObject("pages");
+         String page = pages.toString();
+         int startLink = page.indexOf("http");
+         int endLink = 2;
+         if(page.contains(".jpeg")) {
+           endLink = page.indexOf(".jpeg\"") + 5;
+         } else {
+           endLink = page.indexOf(".jpg\"") + 4;
+         }
+         String url = page.substring(startLink, endLink);
+         PImage img = loadImage(url);
+         image(img, width - 350, 150);
+    
+         
      }
    }
    if(keyCode == 65) {
