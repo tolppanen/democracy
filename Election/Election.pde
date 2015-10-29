@@ -20,9 +20,12 @@ int infoy;
 int year = 2012;
 boolean firstPressed = true;
 PShape hiddenMap; // hidden Map
-ArrayList<Candidate> candidates;
+//ArrayList<Candidate> candidates;
 ArrayList<State> states;
 District activeDistrict;
+PImage pic;
+Boolean mapMode;
+Ball[] balls = new Ball[235];
 //ArrayList<PShape> districtShapes = new ArrayList<PShape>();
 
 
@@ -30,20 +33,28 @@ void setup() {
   size(1200,680);
   surface.setResizable(true);
   setupData(2012);
+  mapMode = true;
+  setupBalls();
 }
   
   void draw() {
   
   background(242, 242, 242);
+  
+  if(mapMode) {
   drawHiddenStates();
   drawVisibleStates();
   drawMenu();
+  }
+  else if(!mapMode) {
+    drawBalls();
+  }
   fill(255,255,255);
   ellipse(mouseX, mouseY, 20, 20);
 }
 
 void setupData(int electionYear) {
-  candidates = new ArrayList<Candidate>();
+  //candidates = new ArrayList<Candidate>();
   states = new ArrayList<State>();
   
   
@@ -195,6 +206,7 @@ void keyPressed() {
    }
    if(keyCode == SHIFT) {
      setupData(2010);
+     setupBalls();
    }
    if(keyCode == 32) {
      int textBox = width / 13;
@@ -228,27 +240,9 @@ void keyPressed() {
 
      
      }
-     
-   //  json = loadJSONObject(link);
-   //  JSONObject queryJSON = json.getJSONObject("query");
-   //  JSONObject pageJSON = queryJSON.getJSONObject("pages");
-  //   String pageID = pageJSON.getString("pageid");
-     
-
-   //  JSONObject thumbJSON = pageJSON.getJSONObject("thumbnail");
-   //  String source = thumbJSON.getString("source");
-   //  println(queryJSON);
-     
-     
-         //palauttaa jsonin
-         /*hae currentState winner Etunimi_Sukunimi
-         luo kuva lataa kuva revi urli jollain tavalla
-         JSON
-         // https://en.wikipedia.org/w/api.php?action=query&titles=TÄHÄN HAKUTERMIT!!!&prop=pageimages&format=json&pithumbsize=400.json  noLoop();
-         //https://en.wikipedia.org/w/api.php?action=query&titles=Al-Farabi&prop=pageimages&format=json&pithumbsize=100
-     //JSONArray stuff = json.getJSONArray("query");
-     //JSONObject page = stuff.getJSONObject("pages");
-     //println(stuff);*/
+   }
+   if(keyCode == 65) {
+     mapMode = false;
    }
   
 }
@@ -257,12 +251,17 @@ void keyPressed() {
 void keyReleased() {
   if(keyCode == SHIFT) {
     setupData(2012);
+    setupBalls();
   }
   if(keyCode == 32) {
      loop();
      info = false;
    }
+   if(keyCode == 65) {
+     mapMode = true;
+   }
 }
+
 
 
 
