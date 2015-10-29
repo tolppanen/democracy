@@ -237,7 +237,6 @@ void keyPressed() {
          setupData(2012);
          setupBalls();
        }} else {
-
            if(!detailView) {
            noLoop();
            fill(45, 45, 45, 191);
@@ -254,7 +253,8 @@ void keyPressed() {
                 RUfirstName + " " + RUlastName, width - 380, 400);
            activeDistrict.getRunnerUpper(year);
          String url = "http://pcforalla.idg.se/polopoly_fs/1.539126.1386947577!teaserImage/imageTypeSelector/localImage/3217596809.jpg";
-         try {
+         String web = loadStrings(link)[0];
+         if(web.charAt(0) == '{') {
            JSONObject json = loadJSONObject(link);
            JSONObject query = json.getJSONObject("query");
            JSONObject pages = query.getJSONObject("pages");
@@ -267,7 +267,6 @@ void keyPressed() {
              endLink = page.indexOf(".jpg\"") + 4;
            }
            url = page.substring(startLink, endLink);
-         } catch (Exception e) {
          }
            PImage img = loadImage(url);
            image(img, width - 350, 150);   
