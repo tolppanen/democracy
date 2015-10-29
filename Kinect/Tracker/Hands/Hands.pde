@@ -18,6 +18,9 @@ import java.util.Iterator;
 import SimpleOpenNI.*;
 
 SimpleOpenNI kinect;
+boolean select = false;
+boolean drag = false;
+boolean tracking = false;
 int handVecListSize = 20;
 Map<Integer,ArrayList<PVector>>  handPathList = new HashMap<Integer,ArrayList<PVector>>();
 color[]       userClr = new color[]{ color(255,0,0),
@@ -27,12 +30,11 @@ color[]       userClr = new color[]{ color(255,0,0),
                                      color(255,0,255),
                                      color(0,255,255)
                                    };
-int x;
-int y;
 PVector cursor;
 void setup()
 {
-  frameRate(200);
+
+  frameRate(30);
   size(640,480);
 
   kinect = new SimpleOpenNI(this);
@@ -52,10 +54,13 @@ void setup()
   // enable hands + gesture generation
   //kinect.enableGesture();
   kinect.enableHand();
+  kinect.startGesture(SimpleOpenNI.GESTURE_HAND_RAISE);
   kinect.startGesture(SimpleOpenNI.GESTURE_WAVE);
+  kinect.startGesture(SimpleOpenNI.GESTURE_CLICK);
   
   // set how smooth the hand capturing should be
   //kinect.setSmoothingHands(.5);
+  cursor = new PVector(-200,-200);
  }
 
 void draw()
@@ -107,7 +112,7 @@ void draw()
 
 void onNewHand(SimpleOpenNI curkinect,int handId,PVector pos)
 {
-  println("onNewHand - handId: " + handId + ", pos: " + pos);
+  //println("onNewHand - handId: " + handId + ", pos: " + pos);
  
   ArrayList<PVector> vecList = new ArrayList<PVector>();
   vecList.add(pos);
@@ -117,7 +122,7 @@ void onNewHand(SimpleOpenNI curkinect,int handId,PVector pos)
 
 void onTrackedHand(SimpleOpenNI curkinect,int handId,PVector pos)
 {
-  println("onTrackedHand - handId: " + handId + ", pos: " + pos );
+  //println("onTrackedHand - handId: " + handId + ", pos: " + pos );
   
   ArrayList<PVector> vecList = handPathList.get(handId);
   if(vecList != null)
@@ -126,13 +131,19 @@ void onTrackedHand(SimpleOpenNI curkinect,int handId,PVector pos)
     if(vecList.size() >= handVecListSize)
       // remove the last point 
       vecList.remove(vecList.size()-1); 
-  }  
+  }
+  cursor = pos;
+  //println(cursor.x + " " + cursor.y);
+  
 }
 
 void onLostHand(SimpleOpenNI curkinect,int handId)
 {
-  println("onLostHand - handId: " + handId);
+  println("LOST");
   handPathList.remove(handId);
+  if (handPathList.size() < 1) {
+    reset();
+  }
 }
 
 // -----------------------------------------------------------------
@@ -140,10 +151,23 @@ void onLostHand(SimpleOpenNI curkinect,int handId)
 
 void onCompletedGesture(SimpleOpenNI curkinect,int gestureType, PVector pos)
 {
-  println("onCompletedGesture - gestureType: " + gestureType + ", pos: " + pos);
-  
-  int handId = kinect.startTrackingHand(pos);
-  println("hand stracked: " + handId);
+  //println("onCompletedGesture - gestureType: " + gestureType + ", pos: " + pos);
+  if (gestureType == 0) {
+    println("WAVE");
+    //int handId = kinect.startTrackingHand(pos);
+    if (!select) select = true; else select = false;
+  } else if (gestureType == 1) {
+    println("CLICK");
+    //int handId = kinect.startTrackingHand(pos);
+    if (!drag) drag = true; else drag = false; 
+  } else if (gestureType == 2) {
+    //println("RAISE_HAND");
+    if (!tracking) {
+      int handId = kinect.startTrackingHand(pos);
+      tracking = true;
+    }
+    
+  }
 }
 
 // -----------------------------------------------------------------
@@ -163,4 +187,10 @@ void keyPressed()
     kinect.setMirror(false);
     break;
   }
+}
+
+void reset() {
+  drag = false;
+  select = false;
+  tracking = false;
 }
