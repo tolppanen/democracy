@@ -20,6 +20,7 @@ ArrayList<Candidate> candidates;
 ArrayList<State> states;
 District activeDistrict;
 PImage pic;
+Boolean mapMode;
 //ArrayList<PShape> districtShapes = new ArrayList<PShape>();
 
 
@@ -27,13 +28,17 @@ void setup() {
   size(1200,680);
   surface.setResizable(true);
   setupData(2012);
+  mapMode = true;
 }
   
   void draw() {
   
   background(255);
+  
+  if(mapMode) {
   drawHiddenStates();
   drawVisibleStates();
+  }
 
   fill(255,255,255);
   ellipse(mouseX, mouseY, 20, 20);
@@ -170,7 +175,7 @@ void keyPressed() {
      zoomY = 617;
    }
    if(keyCode == SHIFT) {
-     setupData(2012);
+     setupData(2010);
    }
    if(keyCode == 32) {
          noLoop();
@@ -194,7 +199,7 @@ void keyPressed() {
 //Placeholder implementation for changing year
 void keyReleased() {
   if(keyCode == SHIFT) {
-    setupData(2004);
+    setupData(2012);
   }
   if(keyCode == 32) {
      loop();
