@@ -28,8 +28,6 @@ PImage pic;
 Boolean mapMode;
 Ball[] balls = new Ball[235];
 boolean detailView;
-<<<<<<< HEAD
-=======
 String activeYear;
 
 
