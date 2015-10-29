@@ -26,6 +26,7 @@ District activeDistrict;
 PImage pic;
 Boolean mapMode;
 Ball[] balls = new Ball[235];
+boolean detailView;
 //ArrayList<PShape> districtShapes = new ArrayList<PShape>();
 
 
@@ -34,6 +35,7 @@ void setup() {
   frame.setResizable(true);
   setupData(2012);
   mapMode = true;
+  detailView = false;
   setupBalls();
 }
   
@@ -234,34 +236,37 @@ void keyPressed() {
          setupData(2012);
          setupBalls();
        }} else {
-         noLoop();
-         fill(45, 45, 45, 191);
-         rect(width - 400, 35, 365, 550, 7);
-         String headline = activeDistrict.state.name + "'s " + activeDistrict.number  + "th " + "\n" + "Congressional District";
-         textSize(20);
-         fill(255,255,255);
-         text(headline, width - 380, 70);
-         String nameQueryString = activeDistrict.getWinner(year).firstName + "_" + activeDistrict.getWinner(year).lastName;
-         String link = "https://en.wikipedia.org/w/api.php?action=query&titles="+ nameQueryString +"&prop=pageimages&format=json&pithumbsize=200"; 
-         String RUfirstName = activeDistrict.getRunnerUpper(year).firstName;
-         String RUlastName = activeDistrict.getRunnerUpper(year).lastName;
-         text(activeDistrict.getWinner(year).firstName + " " + activeDistrict.getWinner(year).lastName + "\n" + 
-              RUfirstName + " " + RUlastName, width - 380, 400);
-         activeDistrict.getRunnerUpper(year);
-         JSONObject json = loadJSONObject(link);
-         JSONObject query = json.getJSONObject("query");
-         JSONObject pages = query.getJSONObject("pages");
-         String page = pages.toString();
-         int startLink = page.indexOf("http");
-         int endLink = 2;
-         if(page.contains(".jpeg")) {
-           endLink = page.indexOf(".jpeg\"") + 5;
-         } else {
-           endLink = page.indexOf(".jpg\"") + 4;
+         if(!detailView) {
+           noLoop();
+           fill(45, 45, 45, 191);
+           rect(width - 400, 35, 365, 550, 7);
+           String headline = activeDistrict.state.name + "'s " + activeDistrict.number  + "th " + "\n" + "Congressional District";
+           textSize(20);
+           fill(255,255,255);
+           text(headline, width - 380, 70);
+           String nameQueryString = activeDistrict.getWinner(year).firstName + "_" + activeDistrict.getWinner(year).lastName;
+           String link = "https://en.wikipedia.org/w/api.php?action=query&titles="+ nameQueryString +"&prop=pageimages&format=json&pithumbsize=200"; 
+           String RUfirstName = activeDistrict.getRunnerUpper(year).firstName;
+           String RUlastName = activeDistrict.getRunnerUpper(year).lastName;
+           text(activeDistrict.getWinner(year).firstName + " " + activeDistrict.getWinner(year).lastName + "\n" + 
+                RUfirstName + " " + RUlastName, width - 380, 400);
+           activeDistrict.getRunnerUpper(year);
+           JSONObject json = loadJSONObject(link);
+           JSONObject query = json.getJSONObject("query");
+           JSONObject pages = query.getJSONObject("pages");
+           String page = pages.toString();
+           int startLink = page.indexOf("http");
+           int endLink = 2;
+           if(page.contains(".jpeg")) {
+             endLink = page.indexOf(".jpeg\"") + 5;
+           } else {
+             endLink = page.indexOf(".jpg\"") + 4;
+           }
+           String url = page.substring(startLink, endLink);
+           PImage img = loadImage(url);
+           image(img, width - 350, 150); 
+           detailView = true;
          }
-         String url = page.substring(startLink, endLink);
-         PImage img = loadImage(url);
-         image(img, width - 350, 150);        
      }
    }
    if(keyCode == 65) {
@@ -277,6 +282,7 @@ void keyReleased() {
     setupBalls();
   }
   if(keyCode == 32) {
+     detailView = false;
      loop();
      info = false;
    }
