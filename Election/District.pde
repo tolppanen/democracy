@@ -48,13 +48,16 @@ class District {
     return winner;
   }
   
-  Object getRunnerUpper(int year) {
+  Candidate getRunnerUpper(int year) {
     Set<Election.Candidate> candidates = this.candidates_2012.keySet();
-    Object[] candidateArray = candidates.toArray();
-     Object candidate = candidateArray[0];
-    if(this.candidates_2012.keySet().size() > 1) {      
-      candidate = candidateArray[1];
+    Candidate runnerUpper = new Candidate("b, v", "R", "s");
+    int index = 0;
+    for(Candidate candidate : candidates_2012.keySet()) {
+      if(index == 1) {
+        runnerUpper = candidate;
+      }
+      index += 1;
     }
-    return candidate;
-}
+    return runnerUpper;
+  }
 }
