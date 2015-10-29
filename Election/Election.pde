@@ -253,7 +253,7 @@ void keyPressed() {
            text(activeDistrict.getWinner(year).firstName + " " + activeDistrict.getWinner(year).lastName + "\n" + 
                 RUfirstName + " " + RUlastName, width - 380, 400);
            activeDistrict.getRunnerUpper(year);
-         String url = "https://en.wikipedia.org/w/api.php?action=query&titles=Barack_Obama&prop=pageimages&format=json&pithumbsize=200";
+         String url = "http://pcforalla.idg.se/polopoly_fs/1.539126.1386947577!teaserImage/imageTypeSelector/localImage/3217596809.jpg";
          try {
            JSONObject json = loadJSONObject(link);
            JSONObject query = json.getJSONObject("query");
@@ -268,7 +268,6 @@ void keyPressed() {
            }
            url = page.substring(startLink, endLink);
          } catch (Exception e) {
-           print("Barack");
          }
            PImage img = loadImage(url);
            image(img, width - 350, 150);   

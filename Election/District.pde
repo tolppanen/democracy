@@ -49,7 +49,6 @@ class District {
   }
   
   Candidate getRunnerUpper(int year) {
-    Set<Election.Candidate> candidates = this.candidates_2012.keySet();
     Candidate runnerUpper = new Candidate("b, v", "R", "s");
     int index = 0;
     for(Candidate candidate : candidates_2012.keySet()) {
