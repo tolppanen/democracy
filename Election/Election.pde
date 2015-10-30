@@ -60,12 +60,14 @@ void setup() {
 }
   
 void draw() {
-  updateGestures();
+  
   background(242, 242, 242);
   if(mapMode) {
-  //drawHiddenStates();
-  //drawVisibleStates();
-  //drawMenu();
+  drawHiddenStates();
+  drawVisibleStates();
+  drawMenu();
+  if(select) drawInfo();
+
 }
   else if(!mapMode) {
     drawBalls();
@@ -257,6 +259,7 @@ void updateGestures() {
     if(firstPressed) {
      startX = (int)cursor.x;
      startY = (int)cursor.y;
+     firstPressed = false;
      return;
     }
     x = origoX + ((int)cursor.x - startX);
@@ -264,7 +267,31 @@ void updateGestures() {
   }
   else {origoX = x; origoY = y;
   }
-   if(select) { // keyCode == 32 // Space
+}
+/*
+void mousePressed() {
+  if(firstPressed) {
+   firstPressed = false;
+   startX = (int)cursor.x;
+   startY = (int)cursor.y; 
+  }
+}
+
+void mouseDragged() {
+  x = origoX + ((int)cursor.x - startX);
+  y = origoY + ((int)cursor.y - startY);
+}
+
+void mouseReleased() {
+  firstPressed = true;
+  origoX = x;
+  origoY = y;
+}
+*/
+
+void drawInfo(){
+    //if(keyCode == 32) { // keyCode == 32 // Space
+   //println("1");
    int textBox = width / 13;
    if((int)cursor.y > height - 20) {
      if((int)cursor.x > textBox && (int)cursor.x < textBox * 2) {
@@ -336,28 +363,8 @@ void updateGestures() {
         detailView = true;
       }
    }
- }
-}
-/*
-void mousePressed() {
-  if(firstPressed) {
-   firstPressed = false;
-   startX = (int)cursor.x;
-   startY = (int)cursor.y; 
-  }
-}
+    }
 
-void mouseDragged() {
-  x = origoX + ((int)cursor.x - startX);
-  y = origoY + ((int)cursor.y - startY);
-}
-
-void mouseReleased() {
-  firstPressed = true;
-  origoX = x;
-  origoY = y;
-}
-*/
 void keyPressed() {
   if(keyCode == UP) {
     zoomY += 25;
@@ -376,7 +383,10 @@ void keyPressed() {
      setupBalls();
    }
    if(keyCode == 65) { // A
-     mapMode = false;
+    firstPressed = true;
+    if (!drag) drag = true;
+    else drag = false;
+    //mapMode = false;
    }  
 }
 
@@ -387,12 +397,14 @@ void keyReleased() {
     setupBalls();
   }
   if(keyCode == 32) {
+      select = false;
      detailView = false;
      loop();
      info = false;
    }
    if(keyCode == 65) {
      mapMode = true;
+     //select = false;
    }
 }
 

@@ -1,8 +1,9 @@
+int numhands = 0;
 void setupKinect() {
   // KINECT SETIT:
 
   frameRate(30);
-  size(640, 480);
+  //size(640, 480);
 
   kinect = new SimpleOpenNI(this);
   if (kinect.isInit() == false) {
@@ -33,14 +34,19 @@ void setupKinect() {
 
 void drawKinect() {
   while (true) {// KINECT SETIT
+  
   // update the cam
   delay(33);
+  updateGestures();
   kinect.update();
   //image(kinect.depthImage(), 0, 0);
   // draw the tracked hands
+  //println("herpderp");
+  //println(handPathList.size());
   if (handPathList.size() > 0) {
     Iterator itr = handPathList.entrySet().iterator();
-    while (itr.hasNext()) {
+    int i = 1;
+    while (i==1) { // VAIN YKSI LOL PURKKA
       Map.Entry mapEntry = (Map.Entry) itr.next();
       int handId = (Integer) mapEntry.getKey();
       ArrayList < PVector > vecList = (ArrayList < PVector > ) mapEntry.getValue();
@@ -66,8 +72,54 @@ void drawKinect() {
       kinect.convertRealWorldToProjective(p, p2d);
       //point(p2d.x, p2d.y);
       cursor = p2d;
+      i++;
     }
   }
+    if (handPathList.size() == 2) {
+          PVector h1 = new PVector(0,0);
+      PVector h1_2d = new PVector(0,0);
+            PVector h2 = new PVector(0,0);
+      PVector h2_2d = new PVector(0,0);
+
+      
+    Iterator itr = handPathList.entrySet().iterator();
+    while (itr.hasNext()) {
+      Map.Entry mapEntry = (Map.Entry) itr.next();
+      //int handId = (Integer) mapEntry.getKey();
+      ArrayList < PVector > vecList = (ArrayList < PVector > ) mapEntry.getValue();
+      //PVector p;
+      //PVector p2d = new PVector();
+      //p = vecList.get(0);
+      //kinect.convertRealWorldToProjective(p, p2d);
+      //point(p2d.x, p2d.y);
+      //cursor = p2d;
+      h1 = vecList.get(0);
+      kinect.convertRealWorldToProjective(h1, h1_2d);
+      mapEntry = (Map.Entry) itr.next();
+      //int handId = (Integer) mapEntry.getKey();
+      vecList = (ArrayList < PVector > ) mapEntry.getValue();
+      //PVector p;
+      //PVector p2d = new PVector();
+      //p = vecList.get(0);
+      //kinect.convertRealWorldToProjective(p, p2d);
+      //point(p2d.x, p2d.y);
+      //cursor = p2d;
+      h2 = vecList.get(0);
+      kinect.convertRealWorldToProjective(h2, h2_2d);
+    }
+      //int zoomMax = 1500;
+      //int zoomMin = 100;
+      zoomY += 25*((h1.x-h2.x-500)/200);
+      zoomX += 25 * zoomYX*((h1.x-h2.x-500)/200);
+      /*if (zoomY > zoomMax || zoomX > zoomMax) {
+        zoomY = zoomMax;
+        zoomX = zoomMax* zoomYX;
+      }
+      else if (zoomY < zoomMax || zoomX < zoomMax) {
+        zoomY = zoomMin;
+        zoomX = zoomMin* zoomYX;
+      }*/
+    }
 }
   // /KINECT SETIT
 }
@@ -76,7 +128,7 @@ void drawKinect() {
 // hand events
 
 void onNewHand(SimpleOpenNI curkinect, int handId, PVector pos) {
-  //println("onNewHand - handId: " + handId + ", pos: " + pos);
+  println("onNewHand - handId: " + handId + ", pos: " + pos);
 
   ArrayList < PVector > vecList = new ArrayList < PVector > ();
   vecList.add(pos);
@@ -102,6 +154,7 @@ void onTrackedHand(SimpleOpenNI curkinect, int handId, PVector pos) {
 void onLostHand(SimpleOpenNI curkinect, int handId) {
   println("LOST");
   handPathList.remove(handId);
+  numhands += -1;
   if (handPathList.size() < 1) {
     reset();
   }
@@ -116,21 +169,31 @@ void onCompletedGesture(SimpleOpenNI curkinect, int gestureType, PVector pos) {
     println("WAVE");
     //int handId = kinect.startTrackingHand(pos);
     if (!select) select = true;
-    else select = false;
+    else {
+     select = false;
+     detailView = false;
+     loop();
+     info = false;}
   } else if (gestureType == 1) {
     println("CLICK");
     //int handId = kinect.startTrackingHand(pos);
-    if (!firstPressed) firstPressed = true;
-    else firstPressed = false;
+    firstPressed = true;
     if (!drag) drag = true;
     else drag = false;
   } else if (gestureType == 2) {
-    //println("RAISE_HAND");
+    println("RAISE_HAND");
     if (!tracking) {
       int handId = kinect.startTrackingHand(pos);
       tracking = true;
+      numhands++;
     }
-
+    else if (true){
+      println("kädet");
+      println(handPathList.size());
+      int handId = kinect.startTrackingHand(pos);
+      numhands++;
+      //tracking = true;
+    }
   }
 }
 
