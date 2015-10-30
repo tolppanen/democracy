@@ -68,7 +68,7 @@ void draw()
   // update the cam
   kinect.update();
 
-  image(kinect.depthImage(),0,0);
+  //image(kinect.depthImage(),0,0);
     
   // draw the tracked hands
   if(handPathList.size() > 0)  
