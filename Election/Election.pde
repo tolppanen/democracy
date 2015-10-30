@@ -62,9 +62,9 @@ void setup() {
   background(242, 242, 242);  
   drawKinect();
   if(mapMode) {
-  //drawHiddenStates();
-  //drawVisibleStates();
-  //drawMenu();
+  drawHiddenStates();
+  drawVisibleStates();
+  drawMenu();
   }
   
   else if(!mapMode) {
@@ -151,10 +151,10 @@ void drawVisibleStates() {
   shape(activeDistrict.district, x, y, zoomX,zoomY);
   stroke(0,0,0);
   fill(219,189,149);
-  rect(mouseX + 15,mouseY - 30, 100,30);
+  rect((int)cursor.x + 15,(int)cursor.y - 30, 100,30);
   fill(100);
   textSize(13);
-  text(districtDesc, mouseX + 45, mouseY -22, 150,40);
+  text(districtDesc, (int)cursor.x + 45, (int)cursor.y -22, 150,40);
   }
 }
 
@@ -166,7 +166,7 @@ void drawHiddenStates() {
        color c = color(j,i,0);
        fill(c);
        shape(states.get(j).districts.get(i).district, x ,y, zoomX, zoomY);
-       if(get(mouseX,mouseY) == c) {
+       if(get((int)cursor.x,(int)cursor.y) == c) {
          activeDistrict = states.get(j).districts.get(i);
        }
      }
@@ -208,14 +208,14 @@ void drawMenu(){
 void mousePressed() {
   if(firstPressed) {
    firstPressed = false;
-   startX = mouseX;
-   startY = mouseY; 
+   startX = (int)cursor.x;
+   startY = (int)cursor.y; 
   }
 }
 
 void mouseDragged() {
-  x = origoX + (mouseX - startX);
-  y = origoY + (mouseY - startY);
+  x = origoX + ((int)cursor.x - startX);
+  y = origoY + ((int)cursor.y - startY);
 }
 
 void mouseReleased() {
@@ -243,28 +243,28 @@ void keyPressed() {
    }
    if(keyCode == 32) {
      int textBox = width / 13;
-     if(mouseY > height - 20) {
-       if(mouseX > textBox && mouseX < textBox * 2) {
+     if((int)cursor.y > height - 20) {
+       if((int)cursor.x > textBox && (int)cursor.x < textBox * 2) {
          setupData(2002);
          setupBalls();
          activeYear="2002";
        }
-       else if(mouseX > textBox * 3 && mouseX < textBox * 4) {
+       else if((int)cursor.x > textBox * 3 && (int)cursor.x < textBox * 4) {
          setupData(2004);
          setupBalls();
          activeYear="2004";
        }
-       else if(mouseX > textBox * 5 && mouseX < textBox * 6) {
+       else if((int)cursor.x > textBox * 5 && (int)cursor.x < textBox * 6) {
          setupData(2006);
          setupBalls();
          activeYear="2006";
        }
-       else if(mouseX > textBox * 7 && mouseX < textBox * 8) {
+       else if((int)cursor.x > textBox * 7 && (int)cursor.x < textBox * 8) {
          setupData(2008);
          setupBalls();
          activeYear="2008";
        }
-       else if(mouseX > textBox * 9 && mouseX < textBox * 10) {
+       else if((int)cursor.x > textBox * 9 && (int)cursor.x < textBox * 10) {
          setupData(2010);
          setupBalls();
          activeYear="2010";

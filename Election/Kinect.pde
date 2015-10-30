@@ -35,7 +35,7 @@ void drawKinect() {
   // KINECT SETIT
   // update the cam
   kinect.update();
-  image(kinect.depthImage(), 0, 0);
+  //image(kinect.depthImage(), 0, 0);
   // draw the tracked hands
   if (handPathList.size() > 0) {
     Iterator itr = handPathList.entrySet().iterator();
@@ -63,7 +63,7 @@ void drawKinect() {
       p = vecList.get(0);
       kinect.convertRealWorldToProjective(p, p2d);
       point(p2d.x, p2d.y);
-      cursor = p2d;
+      cursor = p2d;;
     }
   }
   // /KINECT SETIT
