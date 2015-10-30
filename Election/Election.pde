@@ -63,9 +63,9 @@ void draw() {
   updateGestures();
   background(242, 242, 242);
   if(mapMode) {
-  drawHiddenStates();
-  drawVisibleStates();
-  drawMenu();
+  //drawHiddenStates();
+  //drawVisibleStates();
+  //drawMenu();
 }
   else if(!mapMode) {
     drawBalls();

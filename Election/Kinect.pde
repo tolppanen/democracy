@@ -32,8 +32,9 @@ void setupKinect() {
 
 
 void drawKinect() {
-  while (1) {// KINECT SETIT
+  while (true) {// KINECT SETIT
   // update the cam
+  delay(33);
   kinect.update();
   //image(kinect.depthImage(), 0, 0);
   // draw the tracked hands
