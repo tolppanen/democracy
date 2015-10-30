@@ -89,60 +89,20 @@ void setup() {
 }
   
   void draw() {
-  // KINECT SETIT
-  // update the cam
-  kinect.update();
-
-  //image(kinect.depthImage(),0,0);
-    
-  // draw the tracked hands
-  if(handPathList.size() > 0)  
-  {    
-    Iterator itr = handPathList.entrySet().iterator();     
-    while(itr.hasNext())
-    {
-      Map.Entry mapEntry = (Map.Entry)itr.next(); 
-      int handId =  (Integer)mapEntry.getKey();
-      ArrayList<PVector> vecList = (ArrayList<PVector>)mapEntry.getValue();
-      PVector p;
-      PVector p2d = new PVector();
-      
-        stroke(userClr[ (handId - 1) % userClr.length ]);
-        noFill(); 
-        strokeWeight(1);        
-        Iterator itrVec = vecList.iterator(); 
-        beginShape();
-          while( itrVec.hasNext() ) 
-          { 
-            p = (PVector) itrVec.next(); 
-            
-            kinect.convertRealWorldToProjective(p,p2d);
-            vertex(p2d.x,p2d.y);
-          }
-        endShape();   
-  
-        stroke(userClr[ (handId - 1) % userClr.length ]);
-        strokeWeight(4);
-        p = vecList.get(0);
-        kinect.convertRealWorldToProjective(p,p2d);
-        point(p2d.x,p2d.y);
- 
-    }        
-  }  
-  // /KINECT SETIT
-  background(242, 242, 242);
-  
+  background(242, 242, 242);  
+  drawKinect();
   if(mapMode) {
   drawHiddenStates();
   drawVisibleStates();
   drawMenu();
   }
+  
   else if(!mapMode) {
     drawBalls();
     drawMenu();
   }
   fill(255,255,255);
-  ellipse(mouseX, mouseY, 20, 20);
+  ellipse(cursor.x, cursor.y, 20, 20);
 }
 
 void setupData(int electionYear) {
@@ -273,6 +233,50 @@ void drawMenu(){
  if(activeYear == "2012") fill(0,0,0);
  text(2012, textwidth * 11, height - 10);
  
+}
+
+void drawKinect() {
+  // KINECT SETIT
+  // update the cam
+  kinect.update();
+
+  //image(kinect.depthImage(),0,0);
+    
+  // draw the tracked hands
+  if(handPathList.size() > 0)  
+  {    
+    Iterator itr = handPathList.entrySet().iterator();     
+    while(itr.hasNext())
+    {
+      Map.Entry mapEntry = (Map.Entry)itr.next(); 
+      int handId =  (Integer)mapEntry.getKey();
+      ArrayList<PVector> vecList = (ArrayList<PVector>)mapEntry.getValue();
+      PVector p;
+      PVector p2d = new PVector();
+      
+        stroke(userClr[ (handId - 1) % userClr.length ]);
+        noFill(); 
+        strokeWeight(1);        
+        Iterator itrVec = vecList.iterator(); 
+        beginShape();
+          while( itrVec.hasNext() ) 
+          { 
+            p = (PVector) itrVec.next(); 
+            
+            kinect.convertRealWorldToProjective(p,p2d);
+            vertex(p2d.x,p2d.y);
+          }
+        endShape();   
+  
+        stroke(userClr[ (handId - 1) % userClr.length ]);
+        strokeWeight(4);
+        p = vecList.get(0);
+        kinect.convertRealWorldToProjective(p,p2d);
+        point(p2d.x,p2d.y);
+ 
+    }        
+  }  
+  // /KINECT SETIT
 }
 
 void mousePressed() {
