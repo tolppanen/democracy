@@ -212,7 +212,9 @@ void drawMenu(){
  
  fill(255, 255, 255);
  PFont font;
- font = loadFont("Kalinga-48.vlw");
+ //Kalinga-48
+ //AvenirNextCondensed-Regular-48
+ font = loadFont("KozGoPro-Regular-48.vlw");
  textFont(font, 16);
  if(activeYear == "2002") fill(0,0,0);
  text(2002, textwidth * 1, height - 10);
@@ -307,7 +309,7 @@ void keyPressed() {
            fill(45, 45, 45, 191);
            rect(width - 400, 35, 365, 550, 7);
            String headline = activeDistrict.state.name + "'s " + activeDistrict.number  + "th " + "\n" + "Congressional District";
-           textSize(20);
+           textSize(16);
            fill(255,255,255);
            text(headline, width - 380, 70);
            String winningpercent = String.format("%.1f", activeDistrict.candidates.get(activeDistrict.getTop2().get(0)));
