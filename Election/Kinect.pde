@@ -32,7 +32,7 @@ void setupKinect() {
 
 
 void drawKinect() {
-  // KINECT SETIT
+  while (1) {// KINECT SETIT
   // update the cam
   kinect.update();
   //image(kinect.depthImage(), 0, 0);
@@ -63,10 +63,11 @@ void drawKinect() {
       */
       p = vecList.get(0);
       kinect.convertRealWorldToProjective(p, p2d);
-      point(p2d.x, p2d.y);
+      //point(p2d.x, p2d.y);
       cursor = p2d;
     }
   }
+}
   // /KINECT SETIT
 }
 
