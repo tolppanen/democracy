@@ -264,45 +264,7 @@ void updateGestures() {
   }
   else {origoX = x; origoY = y;
   }
-}
-/*
-void mousePressed() {
-  if(firstPressed) {
-   firstPressed = false;
-   startX = (int)cursor.x;
-   startY = (int)cursor.y; 
-  }
-}
-
-void mouseDragged() {
-  x = origoX + ((int)cursor.x - startX);
-  y = origoY + ((int)cursor.y - startY);
-}
-
-void mouseReleased() {
-  firstPressed = true;
-  origoX = x;
-  origoY = y;
-}
-*/
-void keyPressed() {
-  if(keyCode == UP) {
-    zoomY += 25;
-    zoomX += 25 * zoomYX;
-   } 
-   if(keyCode == DOWN) {
-     zoomY -= 25;
-     zoomX -= 25 * zoomYX;
-   }
-   if(keyCode == CONTROL) {
-     zoomX = 1024;
-     zoomY = 617;
-   }
-   if(keyCode == SHIFT) {
-     setupData(2010);
-     setupBalls();
-   }
-   if(select) { // keyCode == 32 // Space
+     if(select) { // keyCode == 32 // Space
      int textBox = width / 13;
      if((int)cursor.y > height - 20) {
        if((int)cursor.x > textBox && (int)cursor.x < textBox * 2) {
@@ -374,11 +336,48 @@ void keyPressed() {
           detailView = true;
         }
      }
+}
+/*
+void mousePressed() {
+  if(firstPressed) {
+   firstPressed = false;
+   startX = (int)cursor.x;
+   startY = (int)cursor.y; 
+  }
+}
+
+void mouseDragged() {
+  x = origoX + ((int)cursor.x - startX);
+  y = origoY + ((int)cursor.y - startY);
+}
+
+void mouseReleased() {
+  firstPressed = true;
+  origoX = x;
+  origoY = y;
+}
+*/
+void keyPressed() {
+  if(keyCode == UP) {
+    zoomY += 25;
+    zoomX += 25 * zoomYX;
+   } 
+   if(keyCode == DOWN) {
+     zoomY -= 25;
+     zoomX -= 25 * zoomYX;
+   }
+   if(keyCode == CONTROL) {
+     zoomX = 1024;
+     zoomY = 617;
+   }
+   if(keyCode == SHIFT) {
+     setupData(2010);
+     setupBalls();
+   }
    }
    if(keyCode == 65) { // A
      mapMode = false;
-   }
-  
+   }  
 }
 
 //Placeholder implementation for changing year
