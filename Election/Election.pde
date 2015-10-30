@@ -1,10 +1,12 @@
 import de.bezier.data.*;
 import java.util.*;
+import java.lang.Exception.*;
 
 XlsReader reader;
 JSONObject json;
 PShape map;
 Boolean locked;
+Boolean info = false;
 int startX;
 int startY;
 int origoX = 0;
@@ -14,37 +16,43 @@ float zoomY = 617;
 float zoomYX = 1024 / 617;
 int x;
 int y;
+int infox;
+int infoy;
+int year = 2012;
 boolean firstPressed = true;
 PShape hiddenMap; // hidden Map
-//ArrayList<Candidate> candidates;
 ArrayList<State> states;
 District activeDistrict;
 PImage pic;
 Boolean mapMode;
 Ball[] balls = new Ball[235];
-//ArrayList<PShape> districtShapes = new ArrayList<PShape>();
+boolean detailView;
+String activeYear;
 
 
 void setup() {
   size(1200,680);
-  surface.setResizable(true);
+  activeYear = "2012";
+  frame.setResizable(true);
   setupData(2012);
   mapMode = true;
+  detailView = false;
   setupBalls();
 }
   
   void draw() {
   
-  background(255);
+  background(242, 242, 242);
   
   if(mapMode) {
   drawHiddenStates();
   drawVisibleStates();
+  drawMenu();
   }
   else if(!mapMode) {
     drawBalls();
+    drawMenu();
   }
-
   fill(255,255,255);
   ellipse(mouseX, mouseY, 20, 20);
 }
@@ -88,18 +96,20 @@ void setupData(int electionYear) {
     String name = reader.getString();
     reader.nextCell();    
     String party = reader.getString();    
-    reader.nextCell();    
-    Integer votes = reader.getInt();  
     reader.nextCell();
+    reader.nextCell();
+    Float votesPercent = reader.getFloat() * 100;  
+    
     reader.nextCell();   
     Candidate newCandidate = new Candidate(name, party, candidateID);   
-    currentDistrict.candidates_2012.put(newCandidate, votes);
+    currentDistrict.candidates.put(newCandidate, votesPercent);
     }
 
     for(int i = 0; i < states.size(); i++) {
     for(int j = 0; j < states.get(i).districts.size(); j++) {
       states.get(i).districts.get(j).setUp();
-      states.get(i).districts.get(j).getWinner(2012);
+      states.get(i).districts.get(j).getWinner(year);
+      states.get(i).districts.get(j).getRunnerUp(year);
    }
   }
 }
@@ -140,11 +150,41 @@ void drawHiddenStates() {
        shape(states.get(j).districts.get(i).district, x ,y, zoomX, zoomY);
        if(get(mouseX,mouseY) == c) {
          activeDistrict = states.get(j).districts.get(i);
-         //println(activeDistrict.stateCode + " " + activeDistrict.number + " won by " + activeDistrict.getWinner(2012).toString());
        }
      }
    }
   }
+}
+
+void drawMenu(){
+ int textwidth = width / 13;
+ 
+ fill(65, 65, 65, 191);
+ noStroke();
+ rect(0, height - 35, width, height);
+ 
+ fill(255, 255, 255);
+ PFont font;
+ font = loadFont("Kalinga-48.vlw");
+ textFont(font, 16);
+ if(activeYear == "2002") fill(0,0,0);
+ text(2002, textwidth * 1, height - 10);
+ fill(255, 255, 255);
+ if(activeYear == "2004") fill(0,0,0);
+ text(2004, textwidth * 3, height - 10);
+ fill(255, 255, 255);
+ if(activeYear == "2006") fill(0,0,0);
+ text(2006, textwidth * 5, height - 10);
+ fill(255, 255, 255);
+ if(activeYear == "2008") fill(0,0,0);
+ text(2008, textwidth * 7, height - 10);
+ fill(255, 255, 255);
+ if(activeYear == "2010") fill(0,0,0);
+ text(2010, textwidth * 9, height - 10);
+ fill(255, 255, 255);
+ if(activeYear == "2012") fill(0,0,0);
+ text(2012, textwidth * 11, height - 10);
+ 
 }
 
 void mousePressed() {
@@ -184,20 +224,77 @@ void keyPressed() {
      setupBalls();
    }
    if(keyCode == 32) {
-         noLoop();
-         fill(200,220,255,215);
-         rect(50,50,width-100,height-100);
-         String headline = activeDistrict.state.name + "'s " + activeDistrict.number + "th Congressional District";
-         Candidate winningCandidate = activeDistrict.getWinner(2012);
-         String winner = winningCandidate.firstName + " " + winningCandidate.lastName + "(" + winningCandidate.party + ")";
-         Integer votes = activeDistrict.candidates_2012.get(winningCandidate);
-         textSize(40);
-         fill(0,0,0);
-         text(headline, 80 + width/6, 100);
-         textSize(29);
-         text("Winner" + " " + winner + " with " + votes + " votes.", 80, 200); 
-         //palauttaa jsonin
-         // https://en.wikipedia.org/w/api.php?action=query&titles=TÄHÄN HAKUTERMIT!!!&prop=pageimages&format=json&pithumbsize=400.json  noLoop();
+     int textBox = width / 13;
+     if(mouseY > height - 20) {
+       if(mouseX > textBox && mouseX < textBox * 2) {
+         setupData(2002);
+         setupBalls();
+         activeYear="2002";
+       }
+       else if(mouseX > textBox * 3 && mouseX < textBox * 4) {
+         setupData(2004);
+         setupBalls();
+         activeYear="2004";
+       }
+       else if(mouseX > textBox * 5 && mouseX < textBox * 6) {
+         setupData(2006);
+         setupBalls();
+         activeYear="2006";
+       }
+       else if(mouseX > textBox * 7 && mouseX < textBox * 8) {
+         setupData(2008);
+         setupBalls();
+         activeYear="2008";
+       }
+       else if(mouseX > textBox * 9 && mouseX < textBox * 10) {
+         setupData(2010);
+         setupBalls();
+         activeYear="2010";
+       } else {
+         setupData(2012);
+         setupBalls();
+         activeYear="2012";
+       }} else {
+           if(!detailView) {
+           noLoop();
+           fill(45, 45, 45, 191);
+           rect(width - 400, 35, 365, 550, 7);
+           String headline = activeDistrict.state.name + "'s " + activeDistrict.number  + "th " + "\n" + "Congressional District";
+           textSize(20);
+           fill(255,255,255);
+           text(headline, width - 380, 70);
+           String winningpercent = String.format("%.1f", activeDistrict.candidates.get(activeDistrict.getWinner(year)));
+           String runningUppercent = String.format("%.1f", activeDistrict.candidates.get(activeDistrict.getRunnerUp(year)));
+           String nameQueryString = activeDistrict.getWinner(year).firstName + "_" + activeDistrict.getWinner(year).lastName;
+           String link = "https://en.wikipedia.org/w/api.php?action=query&titles="+ nameQueryString +"&prop=pageimages&format=json&pithumbsize=200"; 
+
+           String RUfirstName = activeDistrict.getRunnerUp(year).firstName;
+           String RUlastName = activeDistrict.getRunnerUp(year).lastName;
+           text(activeDistrict.getWinner(year).firstName + " " + activeDistrict.getWinner(year).lastName + " - " + activeDistrict.getWinner(year).party + 
+                " " + winningpercent + "%" +
+                "\n" + "\n"+ "\n" +  "\n" + "\n"+ "Runner Up:" + "\n" +
+                RUfirstName + " " + RUlastName  + " - " + activeDistrict.getRunnerUp(year).party + " " + runningUppercent + "%", width - 380, 400);
+         String url = "http://pcforalla.idg.se/polopoly_fs/1.539126.1386947577!teaserImage/imageTypeSelector/localImage/3217596809.jpg";
+         String web = loadStrings(link)[0];
+         if(web.charAt(0) == '{' && web.contains("http")) {
+           JSONObject json = loadJSONObject(link);
+           JSONObject query = json.getJSONObject("query");
+           JSONObject pages = query.getJSONObject("pages");
+           String page = pages.toString();
+           int startLink = page.indexOf("http");
+           int endLink = 2;
+           if(page.contains(".jpeg")) {
+             endLink = page.indexOf(".jpeg\"") + 5;
+           } else {
+             endLink = page.indexOf(".jpg\"") + 4;
+           }
+           url = page.substring(startLink, endLink);
+           }
+          PImage img = loadImage(url);
+          image(img, width - 350, 150); 
+          detailView = true;
+        }
+     }
    }
    if(keyCode == 65) {
      mapMode = false;
@@ -212,7 +309,9 @@ void keyReleased() {
     setupBalls();
   }
   if(keyCode == 32) {
+     detailView = false;
      loop();
+     info = false;
    }
    if(keyCode == 65) {
      mapMode = true;
