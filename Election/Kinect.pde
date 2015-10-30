@@ -63,13 +63,13 @@ void drawKinect() {
       p = vecList.get(0);
       kinect.convertRealWorldToProjective(p, p2d);
       point(p2d.x, p2d.y);
-      cursor = p2d;;
+      cursor = p2d;
     }
   }
   // /KINECT SETIT
 }
 
-// -----------------------------------------------------------------
+//-----------------------------------------------------------------
 // hand events
 
 void onNewHand(SimpleOpenNI curkinect, int handId, PVector pos) {
@@ -117,6 +117,8 @@ void onCompletedGesture(SimpleOpenNI curkinect, int gestureType, PVector pos) {
   } else if (gestureType == 1) {
     println("CLICK");
     //int handId = kinect.startTrackingHand(pos);
+    if (!firstPressed) firstPressed = true;
+    else firstPressed = false;
     if (!drag) drag = true;
     else drag = false;
   } else if (gestureType == 2) {

@@ -58,14 +58,15 @@ void setup() {
   setupKinect();
 }
   
-  void draw() {
+void draw() {
   background(242, 242, 242);  
   drawKinect();
   if(mapMode) {
   drawHiddenStates();
   drawVisibleStates();
   drawMenu();
-  }
+  updateGestures();
+}
   
   else if(!mapMode) {
     drawBalls();
@@ -205,6 +206,20 @@ void drawMenu(){
  
 }
 
+void updateGestures() {
+  if(drag) {
+    if(firstPressed) {
+     startX = (int)cursor.x;
+     startY = (int)cursor.y;
+     return;
+    }
+    x = origoX + ((int)cursor.x - startX);
+    y = origoY + ((int)cursor.y - startY);
+  }
+  else {origoX = x; origoY = y;
+  }
+}
+/*
 void mousePressed() {
   if(firstPressed) {
    firstPressed = false;
@@ -223,7 +238,7 @@ void mouseReleased() {
   origoX = x;
   origoY = y;
 }
-
+*/
 void keyPressed() {
    if(keyCode == UP) {
     zoomY += 25;
