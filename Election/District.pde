@@ -77,9 +77,9 @@ class District {
     if(this.getTop2().get(0) != null && this.candidates.get(runnerUp) != null) difference = this.candidates.get(winner) / (this.candidates.get(winner) + this.candidates.get(runnerUp));
     else difference = 1.0;
     if(this.getTop2().get(0).party == "Republican") {
-      if(difference > 0.85) districtColor = color(124, 10, 4);
-      else if(difference > 0.65) districtColor = color(134, 20, 14);
-      else districtColor = color(144, 30, 24);
+      if(difference > 0.85) districtColor = color(24, 10, 4);
+      else if(difference > 0.65) districtColor = color(34, 20, 14);
+      else districtColor = color(44, 30, 24);
     }
     else {
       if(difference > 0.75) districtColor = color(28, 40, 65);

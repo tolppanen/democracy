@@ -60,12 +60,12 @@ void setup() {
 }
   
 void draw() {
-  updateGestures();
+  
   background(242, 242, 242);
   if(mapMode) {
-  //drawHiddenStates();
-  //drawVisibleStates();
-  //drawMenu();
+  drawHiddenStates();
+  drawVisibleStates();
+  drawMenu();
 }
   else if(!mapMode) {
     drawBalls();
@@ -230,9 +230,7 @@ void drawMenu(){
  
  fill(255, 255, 255);
  PFont font;
- //Kalinga-48
- //AvenirNextCondensed-Regular-48
- font = loadFont("KozGoPro-Regular-48.vlw");
+ font = loadFont("Kalinga-48.vlw");
  textFont(font, 16);
  if(activeYear == "2002") fill(0,0,0);
  text(2002, textwidth * 1, height - 10);
@@ -266,7 +264,31 @@ void updateGestures() {
   }
   else {origoX = x; origoY = y;
   }
-   if(select) { // keyCode == 32 // Space
+
+}
+/*
+void mousePressed() {
+  if(firstPressed) {
+   firstPressed = false;
+   startX = (int)cursor.x;
+   startY = (int)cursor.y; 
+  }
+}
+
+void mouseDragged() {
+  x = origoX + ((int)cursor.x - startX);
+  y = origoY + ((int)cursor.y - startY);
+}
+
+void mouseReleased() {
+  firstPressed = true;
+  origoX = x;
+  origoY = y;
+}
+*/
+void keyPressed() {
+     if(keyCode == 32) { // keyCode == 32 // Space
+   println("1");
    int textBox = width / 13;
    if((int)cursor.y > height - 20) {
      if((int)cursor.x > textBox && (int)cursor.x < textBox * 2) {
@@ -339,28 +361,6 @@ void updateGestures() {
       }
    }
  }
-}
-/*
-void mousePressed() {
-  if(firstPressed) {
-   firstPressed = false;
-   startX = (int)cursor.x;
-   startY = (int)cursor.y; 
-  }
-}
-
-void mouseDragged() {
-  x = origoX + ((int)cursor.x - startX);
-  y = origoY + ((int)cursor.y - startY);
-}
-
-void mouseReleased() {
-  firstPressed = true;
-  origoX = x;
-  origoY = y;
-}
-*/
-void keyPressed() {
   if(keyCode == UP) {
     zoomY += 25;
     zoomX += 25 * zoomYX;
@@ -377,84 +377,7 @@ void keyPressed() {
      setupData(2010);
      setupBalls();
    }
-<<<<<<< HEAD
-   if(keyCode == 32) {
-     int textBox = width / 13;
-     if(mouseY > height - 20) {
-       if(mouseX > textBox && mouseX < textBox * 2) {
-         setupData(2002);
-         setupBalls();
-         activeYear="2002";
-       }
-       else if(mouseX > textBox * 3 && mouseX < textBox * 4) {
-         setupData(2004);
-         setupBalls();
-         activeYear="2004";
-       }
-       else if(mouseX > textBox * 5 && mouseX < textBox * 6) {
-         setupData(2006);
-         setupBalls();
-         activeYear="2006";
-       }
-       else if(mouseX > textBox * 7 && mouseX < textBox * 8) {
-         setupData(2008);
-         setupBalls();
-         activeYear="2008";
-       }
-       else if(mouseX > textBox * 9 && mouseX < textBox * 10) {
-         setupData(2010);
-         setupBalls();
-         activeYear="2010";
-       } else {
-         setupData(2012);
-         setupBalls();
-         activeYear="2012";
-       }} else {
-           if(!detailView) {
-           noLoop();
-           fill(45, 45, 45, 191);
-           rect(width - 400, 35, 365, 550, 7);
-           String headline = activeDistrict.state.name + "'s " + activeDistrict.number  + "th " + "\n" + "Congressional District";
-           textSize(16);
-           fill(255,255,255);
-           text(headline, width - 380, 70);
-           String winningpercent = String.format("%.1f", activeDistrict.candidates.get(activeDistrict.getTop2().get(0)));
-           String runningUppercent = String.format("%.1f", activeDistrict.candidates.get(activeDistrict.getTop2().get(1)));
-           String nameQueryString = activeDistrict.getTop2().get(0).firstName + "_" + activeDistrict.getTop2().get(0).lastName;
-           String link = "https://en.wikipedia.org/w/api.php?action=query&titles="+ nameQueryString +"&prop=pageimages&format=json&pithumbsize=200"; 
-
-           String RUfirstName = activeDistrict.getTop2().get(1).firstName;
-           String RUlastName = activeDistrict.getTop2().get(1).lastName;
-           text(activeDistrict.getTop2().get(0).firstName + " " + activeDistrict.getTop2().get(0).lastName + " - " + activeDistrict.getTop2().get(0).party + 
-                " " + winningpercent + "%" +
-                "\n" + "\n"+ "\n" +  "\n" + "\n"+ "Runner Up:" + "\n" +
-                RUfirstName + " " + RUlastName  + " - " + activeDistrict.getTop2().get(1).party + " " + runningUppercent + "%", width - 380, 400);
-         String url = "http://pcforalla.idg.se/polopoly_fs/1.539126.1386947577!teaserImage/imageTypeSelector/localImage/3217596809.jpg";
-         String web = loadStrings(link)[0];
-         if(web.charAt(0) == '{' && web.contains("http")) {
-           JSONObject json = loadJSONObject(link);
-           JSONObject query = json.getJSONObject("query");
-           JSONObject pages = query.getJSONObject("pages");
-           String page = pages.toString();
-           int startLink = page.indexOf("http");
-           int endLink = 2;
-           if(page.contains(".jpeg")) {
-             endLink = page.indexOf(".jpeg\"") + 5;
-           } else {
-             endLink = page.indexOf(".jpg\"") + 4;
-           }
-           url = page.substring(startLink, endLink);
-           }
-          PImage img = loadImage(url);
-          image(img, width - 350, 150); 
-          detailView = true;
-        }
-     }
-   }
-   if(keyCode == 65) {
-=======
    if(keyCode == 65) { // A
->>>>>>> feature/tracker
      mapMode = false;
    }  
 }
