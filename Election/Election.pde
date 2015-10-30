@@ -66,6 +66,8 @@ void draw() {
   drawHiddenStates();
   drawVisibleStates();
   drawMenu();
+  if(select) drawInfo();
+
 }
   else if(!mapMode) {
     drawBalls();
@@ -257,6 +259,7 @@ void updateGestures() {
     if(firstPressed) {
      startX = (int)cursor.x;
      startY = (int)cursor.y;
+     firstPressed = false;
      return;
     }
     x = origoX + ((int)cursor.x - startX);
@@ -264,7 +267,6 @@ void updateGestures() {
   }
   else {origoX = x; origoY = y;
   }
-
 }
 /*
 void mousePressed() {
@@ -286,9 +288,10 @@ void mouseReleased() {
   origoY = y;
 }
 */
-void keyPressed() {
-     if(keyCode == 32) { // keyCode == 32 // Space
-   println("1");
+
+void drawInfo(){
+    //if(keyCode == 32) { // keyCode == 32 // Space
+   //println("1");
    int textBox = width / 13;
    if((int)cursor.y > height - 20) {
      if((int)cursor.x > textBox && (int)cursor.x < textBox * 2) {
@@ -360,7 +363,9 @@ void keyPressed() {
         detailView = true;
       }
    }
- }
+    }
+
+void keyPressed() {
   if(keyCode == UP) {
     zoomY += 25;
     zoomX += 25 * zoomYX;
@@ -378,7 +383,10 @@ void keyPressed() {
      setupBalls();
    }
    if(keyCode == 65) { // A
-     mapMode = false;
+    firstPressed = true;
+    if (!drag) drag = true;
+    else drag = false;
+    //mapMode = false;
    }  
 }
 
@@ -389,12 +397,14 @@ void keyReleased() {
     setupBalls();
   }
   if(keyCode == 32) {
+      select = false;
      detailView = false;
      loop();
      info = false;
    }
    if(keyCode == 65) {
      mapMode = true;
+     //select = false;
    }
 }
 

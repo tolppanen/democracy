@@ -41,7 +41,8 @@ void drawKinect() {
   kinect.update();
   //image(kinect.depthImage(), 0, 0);
   // draw the tracked hands
-  println(handPathList.size());
+  //println("herpderp");
+  //println(handPathList.size());
   if (handPathList.size() > 0) {
     Iterator itr = handPathList.entrySet().iterator();
     int i = 1;
@@ -106,9 +107,19 @@ void drawKinect() {
       h2 = vecList.get(0);
       kinect.convertRealWorldToProjective(h2, h2_2d);
     }
-      zoomY += 25*((h1.x-h2.x-200)/200);
-      zoomX += 25 * zoomYX*((h1.x-h2.x-200)/200);
-  }
+      //int zoomMax = 1500;
+      //int zoomMin = 100;
+      zoomY += 25*((h1.x-h2.x-500)/200);
+      zoomX += 25 * zoomYX*((h1.x-h2.x-500)/200);
+      /*if (zoomY > zoomMax || zoomX > zoomMax) {
+        zoomY = zoomMax;
+        zoomX = zoomMax* zoomYX;
+      }
+      else if (zoomY < zoomMax || zoomX < zoomMax) {
+        zoomY = zoomMin;
+        zoomX = zoomMin* zoomYX;
+      }*/
+    }
 }
   // /KINECT SETIT
 }
@@ -158,15 +169,15 @@ void onCompletedGesture(SimpleOpenNI curkinect, int gestureType, PVector pos) {
     println("WAVE");
     //int handId = kinect.startTrackingHand(pos);
     if (!select) select = true;
-    else {select = false;
-      detailView = false;
-      loop();
-       info = false;}
+    else {
+     select = false;
+     detailView = false;
+     loop();
+     info = false;}
   } else if (gestureType == 1) {
     println("CLICK");
     //int handId = kinect.startTrackingHand(pos);
-    if (!firstPressed) firstPressed = true;
-    else firstPressed = false;
+    firstPressed = true;
     if (!drag) drag = true;
     else drag = false;
   } else if (gestureType == 2) {
@@ -178,12 +189,11 @@ void onCompletedGesture(SimpleOpenNI curkinect, int gestureType, PVector pos) {
     }
     else if (true){
       println("kädet");
-      println(handpathlist.size());
+      println(handPathList.size());
       int handId = kinect.startTrackingHand(pos);
       numhands++;
       //tracking = true;
     }
-
   }
 }
 
