@@ -19,7 +19,7 @@ void setupBalls() {
    for(int j = 0; j < states.size(); j++) {    
    for(int i= 0; i < states.get(j).districts.size(); i++) {   
      if(states.get(j).districts.get(i).district != null) {
-       Float currentWinnerVotes = states.get(j).districts.get(i).candidates.get(states.get(j).districts.get(i).getWinner(2012));
+       Float currentWinnerVotes = states.get(j).districts.get(i).candidates.get(states.get(j).districts.get(i).getTop2().get(0));
        color c = states.get(j).districts.get(i).districtColor;
        balls[counter] = new Ball(random(width),random(height), currentWinnerVotes/3000,i+j,c,balls);
        if(counter < 234) counter += 1;

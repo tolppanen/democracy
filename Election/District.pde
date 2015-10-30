@@ -6,6 +6,7 @@ class District {
   PShape country;
   String stateCode;
   color districtColor;
+  ArrayList<Candidate> array;
   
   
   District(State parentState, String districtNo, PShape map){
@@ -31,20 +32,34 @@ class District {
    setDistrictColor();
   }
     
-   Candidate getWinner(int year) {
+   ArrayList<Candidate> getTop2() {
     int index = 0;
-    Candidate winner = new Candidate("a, a","R","a");
+    array = new ArrayList<Candidate>();
+    Candidate runnerUp = new Candidate("a, a", "30");
+    Candidate winner = new Candidate("b, v", "30");
     for(Candidate candidate : candidates.keySet()) {
-      if(index == 0) {
-        winner = candidate;
-      }
+      if(index == 0) winner = candidate;
+      else runnerUp = candidate;
       index += 1;
     }
-    return winner;
+    if(candidates.get(runnerUp) != null) {
+      if(candidates.get(winner) > candidates.get(runnerUp)) {
+        array.add(winner);
+        array.add(runnerUp);
+      } else {
+        array.add(runnerUp);
+        array.add(winner);
+      }
+    } else {
+      array.add(winner);
+      array.add(new Candidate("nA, nB", "2"));
+    }
+     return array; 
+    
   }
   
-  Candidate getRunnerUp(int year) {
-    Candidate RunnerUp = new Candidate("b, v", "R", "s");
+  /*Candidates getRunnerUp(int year) {
+    Candidate RunnerUp = new Candidate("b, v", "R");
     int index = 0;
     for(Candidate candidate : candidates.keySet()) {
       if(index == 1) {
@@ -53,23 +68,23 @@ class District {
       index += 1;
     }
     return RunnerUp;
-  }
+  }*/
   
   void setDistrictColor() {
-    Candidate winner = this.getWinner(2012);
-    Candidate runnerUp = this.getRunnerUp(2012);
+    Candidate winner = this.getTop2().get(0);
+    Candidate runnerUp = this.getTop2().get(1);
     float difference = 0.50000;
-    if(this.getWinner(2012) != null && this.getRunnerUp(2012).id != "s") difference = this.candidates.get(winner) / (this.candidates.get(winner) + this.candidates.get(runnerUp));
+    if(this.getTop2().get(0) != null && this.candidates.get(runnerUp) != null) difference = this.candidates.get(winner) / (this.candidates.get(winner) + this.candidates.get(runnerUp));
     else difference = 1.0;
-    if(this.getWinner(2012).party == "Republican") {
-      if(difference > 0.85) districtColor = color(249, 72, 72);
-      else if(difference > 0.65) districtColor = color(252, 153, 144);
-      else districtColor = color(255,226,215);
+    if(this.getTop2().get(0).party == "Republican") {
+      if(difference > 0.85) districtColor = color(24, 10, 4);
+      else if(difference > 0.65) districtColor = color(34, 20, 14);
+      else districtColor = color(44, 30, 24);
     }
     else {
-      if(difference > 0.75) districtColor = color(39, 103, 183);
-      else if(difference > 0.55) districtColor = color(75, 149, 214);
-      else districtColor = color(178, 216, 236);
+      if(difference > 0.75) districtColor = color(28, 40, 65);
+      else if(difference > 0.55) districtColor = color(38, 50, 75);
+      else districtColor = color(48,60, 85);
     }
     
   }

@@ -87,29 +87,72 @@ void setupData(int electionYear) {
   map = loadShape("data/us_congressional_districts.svg");
   hiddenMap = loadShape("data/us_congressional_districts.svg");
   smooth();
-
   
-  while (reader.hasMoreRows() ) {
-    reader.nextRow();
-    reader.firstCell();    
-    String stateAbbreviation = reader.getString();    
-    reader.nextCell();    
-    String state = reader.getString();    
+  int col = 0;
+  int row = 0;
+  while (reader.hasMoreRows()) {
+    int previousrow = Math.max(row - 1, 0);
+    if(reader.getString(row, col + 2) != reader.getString(previousrow, col + 2)) {
+      for(int i = 0; i < 2; i++) {
+        col = 0;
+        String stateAbbreviation = reader.getString(row, col);
+        String state = reader.getString(row, col + 1);
+        State currentState;    
+        if(states.size() == 0 || states.get(states.size()-1).name != state) {
+         currentState = new State(state, stateAbbreviation);
+         states.add(currentState);
+        } else currentState = states.get(states.size()-1);   
+        String district = reader.getString(row, col + 2);
+        District currentDistrict;    
+        if(currentState.districts.size() == 0 || currentState.districts.get(currentState.districts.size()-1).number != district){
+          currentDistrict = new District(currentState, district, map);
+          currentState.districts.add(currentDistrict);
+        } else currentDistrict = currentState.districts.get(currentState.districts.size()-1);    
+        String name = reader.getString(row, col + 4);
+        String party = reader.getString(row, col + 5);
+        Float votePercent = reader.getFloat(row, col + 7) * 100;
+        Candidate newCandidate = new Candidate(name, party);   
+        currentDistrict.candidates.put(newCandidate, votePercent);
+        reader.nextRow();
+        row = row + 1;
+      }
+
+        
+    } else {
+     reader.nextRow();
+     row = row + 1;
+    }
+  }
+  
+  for(int i = 0; i < states.size(); i++) {
+          for(int j = 0; j < states.get(i).districts.size(); j++) {
+            states.get(i).districts.get(j).setUp();
+            states.get(i).districts.get(j).getTop2();
+         }
+        }
+  //  reader.firstCell();      
+  /* String stateAbbreviation = reader.getString(row, col);
+   print(stateAbbreviation);
+  //  String stateAbbreviation = reader.getString();    
+  //  reader.nextCell();    
+  //  String state = reader.getString();   
+  String state = reader.getString(row, col + 1);
     State currentState;    
     if(states.size() == 0 || states.get(states.size()-1).name != state) {
        currentState = new State(state, stateAbbreviation);
        states.add(currentState);
     }
     else currentState = states.get(states.size()-1);   
-    reader.nextCell();        
-    String district = reader.getString();    
+   // reader.nextCell();        
+   // String district = reader.getString();  
+    String district = reader.getString(row, col + 2);
     District currentDistrict;    
     if(currentState.districts.size() == 0 || currentState.districts.get(currentState.districts.size()-1).number != district){
       currentDistrict = new District(currentState, district, map);
       currentState.districts.add(currentDistrict);
     }
     else currentDistrict = currentState.districts.get(currentState.districts.size()-1);    
-    reader.nextCell();    
+   /* reader.nextCell();    
     String candidateID = reader.getString();    
     reader.nextCell();    
     String name = reader.getString();
@@ -120,17 +163,21 @@ void setupData(int electionYear) {
     Float votesPercent = reader.getFloat() * 100;  
     
     reader.nextCell();   
-    Candidate newCandidate = new Candidate(name, party, candidateID);   
-    currentDistrict.candidates.put(newCandidate, votesPercent);
-    }
+    
+    String name = reader.getString(row, col + 4);
+    String party = reader.getString(row, col + 5);
+    Float votePercent = reader.getFloat(row, col + 6) * 100;
+    Candidate newCandidate = new Candidate(name, party);   
+    currentDistrict.candidates.put(newCandidate, votePercent);
+    
 
     for(int i = 0; i < states.size(); i++) {
     for(int j = 0; j < states.get(i).districts.size(); j++) {
       states.get(i).districts.get(j).setUp();
-      states.get(i).districts.get(j).getWinner(year);
-      states.get(i).districts.get(j).getRunnerUp(year);
+      states.get(i).districts.get(j).getTop2().get(0);
+      states.get(i).districts.get(j).getTop2().get(1);
    }
-  }
+    }*/
 }
 
 
@@ -296,17 +343,17 @@ void keyPressed() {
            textSize(20);
            fill(255,255,255);
            text(headline, width - 380, 70);
-           String winningpercent = String.format("%.1f", activeDistrict.candidates.get(activeDistrict.getWinner(year)));
-           String runningUppercent = String.format("%.1f", activeDistrict.candidates.get(activeDistrict.getRunnerUp(year)));
-           String nameQueryString = activeDistrict.getWinner(year).firstName + "_" + activeDistrict.getWinner(year).lastName;
+           String winningpercent = String.format("%.1f", activeDistrict.candidates.get(activeDistrict.getTop2().get(0)));
+           String runningUppercent = String.format("%.1f", activeDistrict.candidates.get(activeDistrict.getTop2().get(1)));
+           String nameQueryString = activeDistrict.getTop2().get(0).firstName + "_" + activeDistrict.getTop2().get(0).lastName;
            String link = "https://en.wikipedia.org/w/api.php?action=query&titles="+ nameQueryString +"&prop=pageimages&format=json&pithumbsize=200"; 
 
-           String RUfirstName = activeDistrict.getRunnerUp(year).firstName;
-           String RUlastName = activeDistrict.getRunnerUp(year).lastName;
-           text(activeDistrict.getWinner(year).firstName + " " + activeDistrict.getWinner(year).lastName + " - " + activeDistrict.getWinner(year).party + 
+           String RUfirstName = activeDistrict.getTop2().get(1).firstName;
+           String RUlastName = activeDistrict.getTop2().get(1).lastName;
+           text(activeDistrict.getTop2().get(0).firstName + " " + activeDistrict.getTop2().get(0).lastName + " - " + activeDistrict.getTop2().get(0).party + 
                 " " + winningpercent + "%" +
                 "\n" + "\n"+ "\n" +  "\n" + "\n"+ "Runner Up:" + "\n" +
-                RUfirstName + " " + RUlastName  + " - " + activeDistrict.getRunnerUp(year).party + " " + runningUppercent + "%", width - 380, 400);
+                RUfirstName + " " + RUlastName  + " - " + activeDistrict.getTop2().get(1).party + " " + runningUppercent + "%", width - 380, 400);
          String url = "http://pcforalla.idg.se/polopoly_fs/1.539126.1386947577!teaserImage/imageTypeSelector/localImage/3217596809.jpg";
          String web = loadStrings(link)[0];
          if(web.charAt(0) == '{' && web.contains("http")) {
