@@ -1,13 +1,13 @@
 class State {
   String name, abbreviation;
-  ArrayList<District> districts;
-  
-  State(String stateName, String stateAbbreviation){
+  ArrayList < District > districts;
+
+  State(String stateName, String stateAbbreviation) {
     name = stateName;
-    abbreviation = stateAbbreviation;  
-    districts = new ArrayList<District>();
+    abbreviation = stateAbbreviation;
+    districts = new ArrayList < District > ();
   }
-  
+
   public String toString() {
     return this.name;
   }

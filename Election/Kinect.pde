@@ -33,26 +33,26 @@ void setupKinect() {
 
 
 void drawKinect() {
-  while (true) {// KINECT SETIT
-  
-  // update the cam
-  delay(33);
-  updateGestures();
-  kinect.update();
-  //image(kinect.depthImage(), 0, 0);
-  // draw the tracked hands
-  //println("herpderp");
-  //println(handPathList.size());
-  if (handPathList.size() > 0) {
-    Iterator itr = handPathList.entrySet().iterator();
-    int i = 1;
-    while (i==1) { // VAIN YKSI LOL PURKKA
-      Map.Entry mapEntry = (Map.Entry) itr.next();
-      int handId = (Integer) mapEntry.getKey();
-      ArrayList < PVector > vecList = (ArrayList < PVector > ) mapEntry.getValue();
-      PVector p;
-      PVector p2d = new PVector();
-      /* // Draw tails
+  while (true) { // KINECT SETIT
+
+    // update the cam
+    delay(33);
+    updateGestures();
+    kinect.update();
+    //image(kinect.depthImage(), 0, 0);
+    // draw the tracked hands
+    //println("herpderp");
+    //println(handPathList.size());
+    if (handPathList.size() > 0) {
+      Iterator itr = handPathList.entrySet().iterator();
+      int i = 1;
+      while (i == 1) { // VAIN YKSI LOL PURKKA
+        Map.Entry mapEntry = (Map.Entry) itr.next();
+        int handId = (Integer) mapEntry.getKey();
+        ArrayList < PVector > vecList = (ArrayList < PVector > ) mapEntry.getValue();
+        PVector p;
+        PVector p2d = new PVector();
+        /* // Draw tails
       stroke(userClr[(handId - 1) % userClr.length]);
       noFill();
       strokeWeight(1);
@@ -68,50 +68,51 @@ void drawKinect() {
       stroke(userClr[(handId - 1) % userClr.length]);
       strokeWeight(4);
       */
-      p = vecList.get(0);
-      kinect.convertRealWorldToProjective(p, p2d);
-      //point(p2d.x, p2d.y);
-      cursor = p2d;
-      i++;
+        p = vecList.get(0);
+        kinect.convertRealWorldToProjective(p, p2d);
+        //point(p2d.x, p2d.y);
+        cursor = p2d;
+        i++;
+      }
     }
-  }
     if (handPathList.size() == 2) {
-          PVector h1 = new PVector(0,0);
-      PVector h1_2d = new PVector(0,0);
-            PVector h2 = new PVector(0,0);
-      PVector h2_2d = new PVector(0,0);
+      PVector h1 = new PVector(0, 0);
+      PVector h1_2d = new PVector(0, 0);
+      PVector h2 = new PVector(0, 0);
+      PVector h2_2d = new PVector(0, 0);
 
-      
-    Iterator itr = handPathList.entrySet().iterator();
-    while (itr.hasNext()) {
-      Map.Entry mapEntry = (Map.Entry) itr.next();
-      //int handId = (Integer) mapEntry.getKey();
-      ArrayList < PVector > vecList = (ArrayList < PVector > ) mapEntry.getValue();
-      //PVector p;
-      //PVector p2d = new PVector();
-      //p = vecList.get(0);
-      //kinect.convertRealWorldToProjective(p, p2d);
-      //point(p2d.x, p2d.y);
-      //cursor = p2d;
-      h1 = vecList.get(0);
-      kinect.convertRealWorldToProjective(h1, h1_2d);
-      mapEntry = (Map.Entry) itr.next();
-      //int handId = (Integer) mapEntry.getKey();
-      vecList = (ArrayList < PVector > ) mapEntry.getValue();
-      //PVector p;
-      //PVector p2d = new PVector();
-      //p = vecList.get(0);
-      //kinect.convertRealWorldToProjective(p, p2d);
-      //point(p2d.x, p2d.y);
-      //cursor = p2d;
-      h2 = vecList.get(0);
-      kinect.convertRealWorldToProjective(h2, h2_2d);
-    }
+
+      Iterator itr = handPathList.entrySet().iterator();
+      while (itr.hasNext()) {
+        Map.Entry mapEntry = (Map.Entry) itr.next();
+        //int handId = (Integer) mapEntry.getKey();
+        ArrayList < PVector > vecList = (ArrayList < PVector > ) mapEntry.getValue();
+        //PVector p;
+        //PVector p2d = new PVector();
+        //p = vecList.get(0);
+        //kinect.convertRealWorldToProjective(p, p2d);
+        //point(p2d.x, p2d.y);
+        //cursor = p2d;
+        h1 = vecList.get(0);
+        kinect.convertRealWorldToProjective(h1, h1_2d);
+        mapEntry = (Map.Entry) itr.next();
+        //int handId = (Integer) mapEntry.getKey();
+        vecList = (ArrayList < PVector > ) mapEntry.getValue();
+        //PVector p;
+        //PVector p2d = new PVector();
+        //p = vecList.get(0);
+        //kinect.convertRealWorldToProjective(p, p2d);
+        //point(p2d.x, p2d.y);
+        //cursor = p2d;
+        h2 = vecList.get(0);
+        kinect.convertRealWorldToProjective(h2, h2_2d);
+      }
       //int zoomMax = 1500;
-      //int zoomMin = 100;
-      zoomY += 25*((h1.x-h2.x-500)/200);
-      zoomX += 25 * zoomYX*((h1.x-h2.x-500)/200);
-      /*if (zoomY > zoomMax || zoomX > zoomMax) {
+      int zoomMin = 100;
+      if (zoomY > zoomMin) {
+        zoomY += 25 * ((h1.x - h2.x - 500) / 200);
+        zoomX += 25 * zoomYX * ((h1.x - h2.x - 500) / 200);
+        /*if (zoomY > zoomMax || zoomX > zoomMax) {
         zoomY = zoomMax;
         zoomX = zoomMax* zoomYX;
       }
@@ -119,8 +120,12 @@ void drawKinect() {
         zoomY = zoomMin;
         zoomX = zoomMin* zoomYX;
       }*/
+      } else {
+        zoomY += 25;
+        zoomX += 25 * zoomYX;
+      }
     }
-}
+  }
   // /KINECT SETIT
 }
 
@@ -170,10 +175,11 @@ void onCompletedGesture(SimpleOpenNI curkinect, int gestureType, PVector pos) {
     //int handId = kinect.startTrackingHand(pos);
     if (!select) select = true;
     else {
-     select = false;
-     detailView = false;
-     loop();
-     info = false;}
+      select = false;
+      detailView = false;
+      loop();
+      info = false;
+    }
   } else if (gestureType == 1) {
     println("CLICK");
     //int handId = kinect.startTrackingHand(pos);
@@ -186,8 +192,7 @@ void onCompletedGesture(SimpleOpenNI curkinect, int gestureType, PVector pos) {
       int handId = kinect.startTrackingHand(pos);
       tracking = true;
       numhands++;
-    }
-    else if (true){
+    } else if (true) {
       println("kädet");
       println(handPathList.size());
       int handId = kinect.startTrackingHand(pos);
@@ -220,4 +225,8 @@ void reset() {
   drag = false;
   select = false;
   tracking = false;
+  select = false;
+  detailView = false;
+  loop();
+  info = false;
 }
