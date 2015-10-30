@@ -6,6 +6,7 @@ class District {
   PShape country;
   String stateCode;
   color districtColor;
+  ArrayList<Candidate> array;
   
   
   District(State parentState, String districtNo, PShape map){
@@ -28,28 +29,37 @@ class District {
        }     
      district = country.getChild(stateCode);
    }
+   setDistrictColor();
   }
     
-   Candidate getWinner(int year) {
-    Float maxValue = 0.0;
-    Candidate winner = new Candidate("a, a","R","a");
+   ArrayList<Candidate> getTop2() {
+    int index = 0;
+    array = new ArrayList<Candidate>();
+    Candidate runnerUp = new Candidate("a, a", "30");
+    Candidate winner = new Candidate("b, v", "30");
     for(Candidate candidate : candidates.keySet()) {
-     if(this.candidates.get(candidate) >= maxValue) {
-       Candidate currentWinner = candidate;    
-       if(currentWinner.party.equals("Republican")) {
-        districtColor = color(123, 10, 2); 
-       } else {
-        districtColor = color(27, 40, 65); 
-       }
-       winner = candidate;
-       maxValue = this.candidates.get(candidate);
-     } 
+      if(index == 0) winner = candidate;
+      else runnerUp = candidate;
+      index += 1;
     }
-    return winner;
+    if(candidates.get(runnerUp) != null) {
+      if(candidates.get(winner) > candidates.get(runnerUp)) {
+        array.add(winner);
+        array.add(runnerUp);
+      } else {
+        array.add(runnerUp);
+        array.add(winner);
+      }
+    } else {
+      array.add(winner);
+      array.add(new Candidate("nA, nB", "2"));
+    }
+     return array; 
+    
   }
   
-  Candidate getRunnerUp(int year) {
-    Candidate RunnerUp = new Candidate("b, v", "R", "s");
+  /*Candidates getRunnerUp(int year) {
+    Candidate RunnerUp = new Candidate("b, v", "R");
     int index = 0;
     for(Candidate candidate : candidates.keySet()) {
       if(index == 1) {
@@ -58,5 +68,25 @@ class District {
       index += 1;
     }
     return RunnerUp;
+  }*/
+  
+  void setDistrictColor() {
+    Candidate winner = this.getTop2().get(0);
+    Candidate runnerUp = this.getTop2().get(1);
+    float difference = 0.50000;
+    if(this.getTop2().get(0) != null && this.candidates.get(runnerUp) != null) difference = this.candidates.get(winner) / (this.candidates.get(winner) + this.candidates.get(runnerUp));
+    else difference = 1.0;
+    if(this.getTop2().get(0).party == "Republican") {
+      if(difference > 0.85) districtColor = color(24, 10, 4);
+      else if(difference > 0.65) districtColor = color(34, 20, 14);
+      else districtColor = color(44, 30, 24);
+    }
+    else {
+      if(difference > 0.75) districtColor = color(28, 40, 65);
+      else if(difference > 0.55) districtColor = color(38, 50, 75);
+      else districtColor = color(48,60, 85);
+    }
+    
   }
+  
 }
