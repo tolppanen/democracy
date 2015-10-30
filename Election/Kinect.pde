@@ -45,6 +45,7 @@ void drawKinect() {
       ArrayList < PVector > vecList = (ArrayList < PVector > ) mapEntry.getValue();
       PVector p;
       PVector p2d = new PVector();
+      /* // Draw tails
       stroke(userClr[(handId - 1) % userClr.length]);
       noFill();
       strokeWeight(1);
@@ -52,7 +53,6 @@ void drawKinect() {
       beginShape();
       while (itrVec.hasNext()) {
         p = (PVector) itrVec.next();
-
         kinect.convertRealWorldToProjective(p, p2d);
         vertex(p2d.x, p2d.y);
       }
@@ -60,6 +60,7 @@ void drawKinect() {
 
       stroke(userClr[(handId - 1) % userClr.length]);
       strokeWeight(4);
+      */
       p = vecList.get(0);
       kinect.convertRealWorldToProjective(p, p2d);
       point(p2d.x, p2d.y);

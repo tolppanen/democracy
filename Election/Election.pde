@@ -59,15 +59,14 @@ void setup() {
 }
   
 void draw() {
+  updateGestures();
   background(242, 242, 242);  
   drawKinect();
   if(mapMode) {
   drawHiddenStates();
   drawVisibleStates();
   drawMenu();
-  updateGestures();
 }
-  
   else if(!mapMode) {
     drawBalls();
     drawMenu();
@@ -287,7 +286,7 @@ void mouseReleased() {
 }
 */
 void keyPressed() {
-   if(keyCode == UP) {
+  if(keyCode == UP) {
     zoomY += 25;
     zoomX += 25 * zoomYX;
    } 
@@ -303,7 +302,7 @@ void keyPressed() {
      setupData(2010);
      setupBalls();
    }
-   if(keyCode == 32) {
+   if(select) { // keyCode == 32 // Space
      int textBox = width / 13;
      if((int)cursor.y > height - 20) {
        if((int)cursor.x > textBox && (int)cursor.x < textBox * 2) {
@@ -376,7 +375,7 @@ void keyPressed() {
         }
      }
    }
-   if(keyCode == 65) {
+   if(keyCode == 65) { // A
      mapMode = false;
    }
   
