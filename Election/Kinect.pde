@@ -2,7 +2,7 @@ int numhands = 0;
 void setupKinect() {
   // KINECT SETIT:
 
-  frameRate(30);
+  //frameRate(30);
   //size(640, 480);
 
   kinect = new SimpleOpenNI(this);
@@ -26,18 +26,19 @@ void setupKinect() {
 
   // set how smooth the hand capturing should be
   //kinect.setSmoothingHands(.5);
-  cursor = new PVector(-200, -200);
+  cursor = new PVector(0, 0);
 
   // /KINECT SETIT 
 }
 
 
 void drawKinect() {
-  while (true) { // KINECT SETIT
-
+  boolean infinite = true;
+  while (infinite) { // KINECT SETIT
+     infinite = true;
     // update the cam
-    delay(33);
-    updateGestures();
+    //delay(17);
+    //updateGestures();
     kinect.update();
     //image(kinect.depthImage(), 0, 0);
     // draw the tracked hands
@@ -72,6 +73,8 @@ void drawKinect() {
         kinect.convertRealWorldToProjective(p, p2d);
         //point(p2d.x, p2d.y);
         cursor = p2d;
+        cursor.x = (p2d.x/640) * width; // scale resolution
+        cursor.y = (p2d.y/480) * height;
         i++;
       }
     }
@@ -121,8 +124,8 @@ void drawKinect() {
         zoomX = zoomMin* zoomYX;
       }*/
       } else {
-        zoomY += 25;
-        zoomX += 25 * zoomYX;
+        zoomY += 100;
+        zoomX += 100 * zoomYX;
       }
     }
   }

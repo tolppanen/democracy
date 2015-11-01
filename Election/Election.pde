@@ -46,10 +46,15 @@ Boolean mapMode;
 Ball[] balls = new Ball[235];
 boolean detailView;
 String activeYear;
-
+PImage detail_img;
+boolean img_loaded;
+District loaded_district;
+String nameQueryString;
 
 void setup() {
   size(1200, 680);
+  noSmooth(); // Disable AA for performance
+  //smooth(2);
   activeYear = "2012";
   frame.setResizable(true);
   setupData(2012);
@@ -61,12 +66,12 @@ void setup() {
 }
 
 void draw() {
-
   background(242, 242, 242);
   if (mapMode) {
     drawHiddenStates();
     drawVisibleStates();
     drawMenu();
+    //drawKinect();
     if (select) drawInfo();
 
   } else if (!mapMode) {
@@ -87,7 +92,7 @@ void setupData(int electionYear) {
 
   map = loadShape("data/us_congressional_districts.svg");
   hiddenMap = loadShape("data/us_congressional_districts.svg");
-  smooth();
+  //smooth();
 
   int col = 0;
   int row = 0;
@@ -183,13 +188,18 @@ void setupData(int electionYear) {
 
 
 void drawVisibleStates() {
+  State current_s;
+  District current_d;
+  stroke(color(255, 255, 255));
+  //hint(ENABLE_STROKE_PURE); // Enable for better quality strokes
   for (int j = 0; j < states.size(); j++) {
-    for (int i = 0; i < states.get(j).districts.size(); i++) {
-      if (states.get(j).districts.get(i).district != null) {
-        states.get(j).districts.get(i).district.disableStyle();
-        stroke(color(255, 255, 255));
-        fill(states.get(j).districts.get(i).districtColor);
-        shape(states.get(j).districts.get(i).district, x, y, zoomX, zoomY);
+    current_s = states.get(j);
+    for (int i = 0; i < current_s.districts.size(); i++) {
+      current_d = current_s.districts.get(i);
+      if (current_d.district != null) {
+        current_d.district.disableStyle();
+        fill(current_d.districtColor);
+        shape(current_d.district, x, y, zoomX, zoomY);
       }
     }
   }
@@ -208,15 +218,19 @@ void drawVisibleStates() {
 }
 
 void drawHiddenStates() {
+  State current_s;
+  District current_d;
   for (int j = 0; j < states.size(); j++) {
-    for (int i = 0; i < states.get(j).districts.size(); i++) {
-      if (states.get(j).districts.get(i).district != null) {
-        states.get(j).districts.get(i).district.disableStyle();
+    current_s = states.get(j);
+    for (int i = 0; i < current_s.districts.size(); i++) {
+      current_d = current_s.districts.get(i);
+      if (current_d.district != null) {
+        current_d.district.disableStyle();
         color c = color(j, i, 0);
         fill(c);
-        shape(states.get(j).districts.get(i).district, x, y, zoomX, zoomY);
-        if (get((int) cursor.x, (int) cursor.y) == c) {
-          activeDistrict = states.get(j).districts.get(i);
+        shape(current_d.district, x, y, zoomX, zoomY);
+        if (get((int)cursor.x, (int)cursor.y) == c) { 
+          activeDistrict = current_d;
         }
       }
     }
@@ -269,18 +283,18 @@ void updateGestures() {
     origoY = y;
   }
 }
-/*
+
 void mousePressed() {
   if(firstPressed) {
    firstPressed = false;
-   startX = (int)cursor.x;
-   startY = (int)cursor.y; 
+   startX = mouseX;
+   startY = mouseY; 
   }
 }
 
 void mouseDragged() {
-  x = origoX + ((int)cursor.x - startX);
-  y = origoY + ((int)cursor.y - startY);
+  x = origoX + (mouseX - startX);
+  y = origoY + (mouseY - startY);
 }
 
 void mouseReleased() {
@@ -288,7 +302,7 @@ void mouseReleased() {
   origoX = x;
   origoY = y;
 }
-*/
+
 
 void drawInfo() {
   //if(keyCode == 32) { // keyCode == 32 // Space
@@ -322,44 +336,57 @@ void drawInfo() {
     }
   } else {
     if (!detailView) {
-      noLoop();
+      //noLoop();
+      ArrayList < Candidate > top2 = activeDistrict.getTop2();
+      Candidate winner = top2.get(0);
+      Candidate runnerup = top2.get(1);
       fill(45, 45, 45, 191);
       rect(width - 400, 35, 365, 550, 7);
       String headline = activeDistrict.state.name + "'s " + activeDistrict.number + "th " + "\n" + "Congressional District";
       textSize(20);
       fill(255, 255, 255);
       text(headline, width - 380, 70);
-      String winningpercent = String.format("%.1f", activeDistrict.candidates.get(activeDistrict.getTop2().get(0)));
-      String runningUppercent = String.format("%.1f", activeDistrict.candidates.get(activeDistrict.getTop2().get(1)));
-      String nameQueryString = activeDistrict.getTop2().get(0).firstName + "_" + activeDistrict.getTop2().get(0).lastName;
-      String link = "https://en.wikipedia.org/w/api.php?action=query&titles=" + nameQueryString + "&prop=pageimages&format=json&pithumbsize=200";
-
-      String RUfirstName = activeDistrict.getTop2().get(1).firstName;
-      String RUlastName = activeDistrict.getTop2().get(1).lastName;
-      text(activeDistrict.getTop2().get(0).firstName + " " + activeDistrict.getTop2().get(0).lastName + " - " + activeDistrict.getTop2().get(0).party +
+      String winningpercent = String.format("%.1f", activeDistrict.candidates.get(winner));
+      String runningUppercent = String.format("%.1f", activeDistrict.candidates.get(runnerup));
+      nameQueryString = winner.firstName + "_" + winner.lastName;
+      String RUfirstName = runnerup.firstName;
+      String RUlastName = runnerup.lastName;
+      text(winner.firstName + " " + winner.lastName + " - " + winner.party +
         " " + winningpercent + "%" +
-        "\n" + "\n" + "\n" + "\n" + "\n" + "Runner Up:" + "\n" + RUfirstName + " " + RUlastName + " - " + activeDistrict.getTop2().get(1).party + " " + runningUppercent + "%", width - 380, 400);
-      String url = "http://pcforalla.idg.se/polopoly_fs/1.539126.1386947577!teaserImage/imageTypeSelector/localImage/3217596809.jpg";
-      String web = loadStrings(link)[0];
-      if (web.charAt(0) == '{' && web.contains("http")) {
-        JSONObject json = loadJSONObject(link);
-        JSONObject query = json.getJSONObject("query");
-        JSONObject pages = query.getJSONObject("pages");
-        String page = pages.toString();
-        int startLink = page.indexOf("http");
-        int endLink = 2;
-        if (page.contains(".jpeg")) {
-          endLink = page.indexOf(".jpeg\"") + 5;
-        } else {
-          endLink = page.indexOf(".jpg\"") + 4;
-        }
-        url = page.substring(startLink, endLink);
+        "\n" + "\n" + "\n" + "\n" + "\n" + "Runner Up:" + "\n" + RUfirstName + " " + RUlastName + " - " + runnerup.party + " " + runningUppercent + "%", width - 380, 400);
+      
+      if( !img_loaded || loaded_district != activeDistrict){
+        thread("loadImg");
       }
-      PImage img = loadImage(url);
-      image(img, width - 350, 150);
-      detailView = true;
+      if (img_loaded && loaded_district == activeDistrict) image(detail_img, width - 350, 150);
     }
+    //delay(100);
   }
+}
+
+void loadImg() {
+        String link = "https://en.wikipedia.org/w/api.php?action=query&titles=" + nameQueryString + "&prop=pageimages&format=json&pithumbsize=200";
+        String url = "http://pcforalla.idg.se/polopoly_fs/1.539126.1386947577!teaserImage/imageTypeSelector/localImage/3217596809.jpg";
+        String web = loadStrings(link)[0];
+        if (web.charAt(0) == '{' && web.contains("http")) {
+          JSONObject json = loadJSONObject(link);
+          JSONObject query = json.getJSONObject("query");
+          JSONObject pages = query.getJSONObject("pages");
+          String page = pages.toString();
+          int startLink = page.indexOf("http");
+          int endLink = 2;
+          if (page.contains(".jpeg")) {
+            endLink = page.indexOf(".jpeg\"") + 5;
+          } else {
+            endLink = page.indexOf(".jpg\"") + 4;
+          }
+          url = page.substring(startLink, endLink);
+        }
+        detail_img = loadImage(url);
+        img_loaded = true;
+        loaded_district = activeDistrict;
+        //detailView = true;
+        //loop();
 }
 
 void keyPressed() {
@@ -380,10 +407,19 @@ void keyPressed() {
     setupBalls();
   }
   if (keyCode == 65) { // A
-    firstPressed = true;
-    if (!drag) drag = true;
-    else drag = false;
-    //mapMode = false;
+    //firstPressed = true;
+    //if (!drag) drag = true;
+    //else drag = false;
+    mapMode = false;
+  }
+  if (keyCode == 32) { // Space
+    println("pressed");
+    if (!select) select = true;
+    else {
+      select = false;
+      detailView = false;
+      info = false;
+    }
   }
 }
 
@@ -394,12 +430,12 @@ void keyReleased() {
     setupBalls();
   }
   if (keyCode == 32) {
-    select = false;
-    detailView = false;
-    loop();
-    info = false;
+    //select = false;
+    //detailView = false;
+    //loop();
+    //info = false;
   }
-  if (keyCode == 65) {
+  if (keyCode == 65) { // A
     mapMode = true;
     //select = false;
   }
