@@ -8,14 +8,12 @@ class District {
   color districtColor;
   ArrayList < Candidate > array;
 
-
   District(State parentState, String districtNo, PShape map) {
     state = parentState;
     number = districtNo;
     candidates = new HashMap < Candidate, Float > ();
     country = map;
     districtColor = color(0, 0, 0);
-
   }
 
   void setUp() {
@@ -55,7 +53,6 @@ class District {
       array.add(new Candidate("nA, nB", "2"));
     }
     return array;
-
   }
 
   /*Candidates getRunnerUp(int year) {
@@ -74,9 +71,9 @@ class District {
     Candidate winner = this.getTop2().get(0);
     Candidate runnerUp = this.getTop2().get(1);
     float difference = 0.50000;
-    if (this.getTop2().get(0) != null && this.candidates.get(runnerUp) != null) difference = this.candidates.get(winner) / (this.candidates.get(winner) + this.candidates.get(runnerUp));
+    if (winner != null && this.candidates.get(runnerUp) != null) difference = this.candidates.get(winner) / (this.candidates.get(winner) + this.candidates.get(runnerUp));
     else difference = 1.0;
-    if (this.getTop2().get(0).party == "Republican") {
+    if (winner.party == "Republican") {
       if (difference > 0.85) districtColor = color(24, 10, 4);
       else if (difference > 0.65) districtColor = color(34, 20, 14);
       else districtColor = color(44, 30, 24);
@@ -85,7 +82,5 @@ class District {
       else if (difference > 0.55) districtColor = color(38, 50, 75);
       else districtColor = color(48, 60, 85);
     }
-
   }
-
 }

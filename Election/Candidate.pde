@@ -11,9 +11,7 @@ class Candidate {
     else if (candidateParty.contains("D")) party = "Democrat";
     else party = "Other";
   }
-
   public String toString() {
     return this.firstName + " " + this.lastName + " (" + this.party + ")";
   }
-
 }

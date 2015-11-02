@@ -1,7 +1,7 @@
 import de.bezier.data.*;
 import java.util.*;
 import java.lang.Exception.*;
-// KINECT SETIT
+// KINECT
 import SimpleOpenNI.*;
 SimpleOpenNI kinect;
 boolean select = false;
@@ -18,13 +18,12 @@ color[] userClr = new color[] {
   color(0, 255, 255)
 };
 PVector cursor;
-// /KINECT SETIT
+// /KINECT
 
 XlsReader reader;
 JSONObject json;
 PShape map;
 Boolean locked;
-Boolean info = false;
 int startX;
 int startY;
 int origoX = 0;
@@ -34,8 +33,6 @@ float zoomY = 617;
 float zoomYX = 1024 / 617;
 int x;
 int y;
-int infox;
-int infoy;
 int year = 2012;
 boolean firstPressed = true;
 PShape hiddenMap; // hidden Map
@@ -44,25 +41,23 @@ District activeDistrict;
 PImage pic;
 Boolean mapMode;
 Ball[] balls = new Ball[235];
-boolean detailView;
 String activeYear;
-PImage detail_img;
-boolean img_loaded;
-District loaded_district;
+PImage detailImg;
+boolean imgLoaded;
+District loadedDistrict;
 String nameQueryString;
 
 void setup() {
   size(1200, 680);
   noSmooth(); // Disable AA for performance
-  //smooth(2);
+  //smooth(2); // Anti-aliasing
   activeYear = "2012";
   frame.setResizable(true);
   setupData(2012);
   mapMode = true;
-  detailView = false;
   setupBalls();
   setupKinect();
-  thread("drawKinect");
+  thread("drawKinect"); // Thread Kinect to allow proper update speed
 }
 
 void draw() {
@@ -71,9 +66,9 @@ void draw() {
     drawHiddenStates();
     drawVisibleStates();
     drawMenu();
-    //drawKinect();
+    //drawKinect(); // Uncomment for non-threaded testing
     if (select) drawInfo();
-
+    updateDrag();
   } else if (!mapMode) {
     drawBalls();
     drawMenu();
@@ -83,16 +78,11 @@ void draw() {
 }
 
 void setupData(int electionYear) {
-  //candidates = new ArrayList<Candidate>();
   states = new ArrayList < State > ();
-
-
   reader = new XlsReader(this, "data/formatted_data_" + electionYear + ".xls");
   reader.firstRow();
-
   map = loadShape("data/us_congressional_districts.svg");
   hiddenMap = loadShape("data/us_congressional_districts.svg");
-  //smooth();
 
   int col = 0;
   int row = 0;
@@ -122,8 +112,6 @@ void setupData(int electionYear) {
         reader.nextRow();
         row = row + 1;
       }
-
-
     } else {
       reader.nextRow();
       row = row + 1;
@@ -136,62 +124,13 @@ void setupData(int electionYear) {
       states.get(i).districts.get(j).getTop2();
     }
   }
-  //  reader.firstCell();      
-  /* String stateAbbreviation = reader.getString(row, col);
-   print(stateAbbreviation);
-  //  String stateAbbreviation = reader.getString();    
-  //  reader.nextCell();    
-  //  String state = reader.getString();   
-  String state = reader.getString(row, col + 1);
-    State currentState;    
-    if(states.size() == 0 || states.get(states.size()-1).name != state) {
-       currentState = new State(state, stateAbbreviation);
-       states.add(currentState);
-    }
-    else currentState = states.get(states.size()-1);   
-   // reader.nextCell();        
-   // String district = reader.getString();  
-    String district = reader.getString(row, col + 2);
-    District currentDistrict;    
-    if(currentState.districts.size() == 0 || currentState.districts.get(currentState.districts.size()-1).number != district){
-      currentDistrict = new District(currentState, district, map);
-      currentState.districts.add(currentDistrict);
-    }
-    else currentDistrict = currentState.districts.get(currentState.districts.size()-1);    
-   /* reader.nextCell();    
-    String candidateID = reader.getString();    
-    reader.nextCell();    
-    String name = reader.getString();
-    reader.nextCell();    
-    String party = reader.getString();    
-    reader.nextCell();
-    reader.nextCell();
-    Float votesPercent = reader.getFloat() * 100;  
-    
-    reader.nextCell();   
-    
-    String name = reader.getString(row, col + 4);
-    String party = reader.getString(row, col + 5);
-    Float votePercent = reader.getFloat(row, col + 6) * 100;
-    Candidate newCandidate = new Candidate(name, party);   
-    currentDistrict.candidates.put(newCandidate, votePercent);
-    
-
-    for(int i = 0; i < states.size(); i++) {
-    for(int j = 0; j < states.get(i).districts.size(); j++) {
-      states.get(i).districts.get(j).setUp();
-      states.get(i).districts.get(j).getTop2().get(0);
-      states.get(i).districts.get(j).getTop2().get(1);
-   }
-    }*/
 }
-
 
 void drawVisibleStates() {
   State current_s;
   District current_d;
   stroke(color(255, 255, 255));
-  //hint(ENABLE_STROKE_PURE); // Enable for better quality strokes
+  //hint(ENABLE_STROKE_PURE); // Uncomment for better quality strokes at the cost of performance
   for (int j = 0; j < states.size(); j++) {
     current_s = states.get(j);
     for (int i = 0; i < current_s.districts.size(); i++) {
@@ -229,7 +168,7 @@ void drawHiddenStates() {
         color c = color(j, i, 0);
         fill(c);
         shape(current_d.district, x, y, zoomX, zoomY);
-        if (get((int)cursor.x, (int)cursor.y) == c) { 
+        if (get((int) cursor.x, (int) cursor.y) == c) {
           activeDistrict = current_d;
         }
       }
@@ -239,15 +178,14 @@ void drawHiddenStates() {
 
 void drawMenu() {
   int textwidth = width / 13;
-
   fill(65, 65, 65, 191);
   noStroke();
   rect(0, height - 35, width, height);
-
   fill(255, 255, 255);
   PFont font;
   font = loadFont("Kalinga-48.vlw");
   textFont(font, 16);
+
   if (activeYear == "2002") fill(0, 0, 0);
   text(2002, textwidth * 1, height - 10);
   fill(255, 255, 255);
@@ -265,10 +203,9 @@ void drawMenu() {
   fill(255, 255, 255);
   if (activeYear == "2012") fill(0, 0, 0);
   text(2012, textwidth * 11, height - 10);
-
 }
 
-void updateGestures() {
+void updateDrag() {
   if (drag) {
     if (firstPressed) {
       startX = (int) cursor.x;
@@ -278,17 +215,14 @@ void updateGestures() {
     }
     x = origoX + ((int) cursor.x - startX);
     y = origoY + ((int) cursor.y - startY);
-  } else {
-    origoX = x;
-    origoY = y;
   }
 }
 
 void mousePressed() {
-  if(firstPressed) {
-   firstPressed = false;
-   startX = mouseX;
-   startY = mouseY; 
+  if (firstPressed) {
+    firstPressed = false;
+    startX = mouseX;
+    startY = mouseY;
   }
 }
 
@@ -303,10 +237,7 @@ void mouseReleased() {
   origoY = y;
 }
 
-
 void drawInfo() {
-  //if(keyCode == 32) { // keyCode == 32 // Space
-  //println("1");
   int textBox = width / 13;
   if ((int) cursor.y > height - 20) {
     if ((int) cursor.x > textBox && (int) cursor.x < textBox * 2) {
@@ -335,58 +266,50 @@ void drawInfo() {
       activeYear = "2012";
     }
   } else {
-    if (!detailView) {
-      //noLoop();
-      ArrayList < Candidate > top2 = activeDistrict.getTop2();
-      Candidate winner = top2.get(0);
-      Candidate runnerup = top2.get(1);
-      fill(45, 45, 45, 191);
-      rect(width - 400, 35, 365, 550, 7);
-      String headline = activeDistrict.state.name + "'s " + activeDistrict.number + "th " + "\n" + "Congressional District";
-      textSize(20);
-      fill(255, 255, 255);
-      text(headline, width - 380, 70);
-      String winningpercent = String.format("%.1f", activeDistrict.candidates.get(winner));
-      String runningUppercent = String.format("%.1f", activeDistrict.candidates.get(runnerup));
-      nameQueryString = winner.firstName + "_" + winner.lastName;
-      String RUfirstName = runnerup.firstName;
-      String RUlastName = runnerup.lastName;
-      text(winner.firstName + " " + winner.lastName + " - " + winner.party +
-        " " + winningpercent + "%" +
-        "\n" + "\n" + "\n" + "\n" + "\n" + "Runner Up:" + "\n" + RUfirstName + " " + RUlastName + " - " + runnerup.party + " " + runningUppercent + "%", width - 380, 400);
-      
-      if( !img_loaded || loaded_district != activeDistrict){
-        thread("loadImg");
-      }
-      if (img_loaded && loaded_district == activeDistrict) image(detail_img, width - 350, 150);
-    }
-    //delay(100);
+    ArrayList < Candidate > top2 = activeDistrict.getTop2();
+    Candidate winner = top2.get(0);
+    Candidate runnerup = top2.get(1);
+    fill(45, 45, 45, 191);
+    rect(width - 400, 35, 365, 550, 7);
+    String headline = activeDistrict.state.name + "'s " + activeDistrict.number + "th " + "\n" + "Congressional District";
+    textSize(20);
+    fill(255, 255, 255);
+    text(headline, width - 380, 70);
+    String winningpercent = String.format("%.1f", activeDistrict.candidates.get(winner));
+    String runningUppercent = String.format("%.1f", activeDistrict.candidates.get(runnerup));
+    nameQueryString = winner.firstName + "_" + winner.lastName;
+    String RUfirstName = runnerup.firstName;
+    String RUlastName = runnerup.lastName;
+    text(winner.firstName + " " + winner.lastName + " - " + winner.party +
+      " " + winningpercent + "%" +
+      "\n" + "\n" + "\n" + "\n" + "\n" + "Runner Up:" + "\n" + RUfirstName + " " + RUlastName + " - " + runnerup.party + " " + runningUppercent + "%", width - 380, 400);
+
+    if (!imgLoaded || loadedDistrict != activeDistrict) thread("loadImg"); // If no image loaded or district changed, download image in a thread.
+    if (imgLoaded && loadedDistrict == activeDistrict) image(detailImg, width - 350, 150); // Draw image
   }
 }
 
 void loadImg() {
-        String link = "https://en.wikipedia.org/w/api.php?action=query&titles=" + nameQueryString + "&prop=pageimages&format=json&pithumbsize=200";
-        String url = "http://pcforalla.idg.se/polopoly_fs/1.539126.1386947577!teaserImage/imageTypeSelector/localImage/3217596809.jpg";
-        String web = loadStrings(link)[0];
-        if (web.charAt(0) == '{' && web.contains("http")) {
-          JSONObject json = loadJSONObject(link);
-          JSONObject query = json.getJSONObject("query");
-          JSONObject pages = query.getJSONObject("pages");
-          String page = pages.toString();
-          int startLink = page.indexOf("http");
-          int endLink = 2;
-          if (page.contains(".jpeg")) {
-            endLink = page.indexOf(".jpeg\"") + 5;
-          } else {
-            endLink = page.indexOf(".jpg\"") + 4;
-          }
-          url = page.substring(startLink, endLink);
-        }
-        detail_img = loadImage(url);
-        img_loaded = true;
-        loaded_district = activeDistrict;
-        //detailView = true;
-        //loop();
+  String link = "https://en.wikipedia.org/w/api.php?action=query&titles=" + nameQueryString + "&prop=pageimages&format=json&pithumbsize=200";
+  String url = "http://pcforalla.idg.se/polopoly_fs/1.539126.1386947577!teaserImage/imageTypeSelector/localImage/3217596809.jpg";
+  String web = loadStrings(link)[0];
+  if (web.charAt(0) == '{' && web.contains("http")) {
+    JSONObject json = loadJSONObject(link);
+    JSONObject query = json.getJSONObject("query");
+    JSONObject pages = query.getJSONObject("pages");
+    String page = pages.toString();
+    int startLink = page.indexOf("http");
+    int endLink = 2;
+    if (page.contains(".jpeg")) {
+      endLink = page.indexOf(".jpeg\"") + 5;
+    } else {
+      endLink = page.indexOf(".jpg\"") + 4;
+    }
+    url = page.substring(startLink, endLink);
+  }
+  detailImg = loadImage(url);
+  imgLoaded = true;
+  loadedDistrict = activeDistrict;
 }
 
 void keyPressed() {
@@ -406,19 +329,18 @@ void keyPressed() {
     setupData(2010);
     setupBalls();
   }
-  if (keyCode == 65) { // A
-    //firstPressed = true;
-    //if (!drag) drag = true;
-    //else drag = false;
+  if (key == 'b') { // b, Test drag
+    firstPressed = true;
+    if (!drag) drag = true;
+    else drag = false;
+  }
+  if (keyCode == 65) { // a
     mapMode = false;
   }
-  if (keyCode == 32) { // Space
-    println("pressed");
+  if (keyCode == 32) { // Space, test drawInfo
     if (!select) select = true;
     else {
       select = false;
-      detailView = false;
-      info = false;
     }
   }
 }
@@ -437,6 +359,5 @@ void keyReleased() {
   }
   if (keyCode == 65) { // A
     mapMode = true;
-    //select = false;
   }
 }
